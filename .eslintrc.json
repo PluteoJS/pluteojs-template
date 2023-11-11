@@ -1,0 +1,210 @@
+{
+	"root": true,
+	"env": {
+		"es2021": true,
+		"node": true
+	},
+	"extends": [
+		"airbnb-base",
+		"plugin:@typescript-eslint/eslint-recommended",
+		"plugin:@typescript-eslint/recommended",
+		"plugin:import/errors",
+		"plugin:import/warnings",
+		"plugin:import/typescript",
+		"prettier"
+	],
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"project": "tsconfig.json",
+		"ecmaVersion": "latest",
+		"ecmaFeatures": {"modules": true, "templateStrings": true},
+		"sourceType": "module",
+		"createDefaultProgram": true
+	},
+	"plugins": [
+		"@typescript-eslint",
+		"@typescript-eslint/eslint-plugin",
+		"prettier"
+	],
+	"settings": {
+		"import/resolver": {
+			"typescript": {} // this loads <rootdir>/tsconfig.json to eslint
+		}
+	},
+	"rules": {
+		"prettier/prettier": [
+			"error",
+			{
+				"singleQuote": false,
+				"bracketSameLine": false,
+				"endOfLine": "auto"
+			}
+		],
+
+		"no-use-before-define": [
+			"error",
+			{"functions": true, "classes": true, "variables": true}
+		],
+		"@typescript-eslint/no-use-before-define": ["error"],
+
+		"quotes": ["error", "double", {"allowTemplateLiterals": true}],
+
+		"semi": ["error", "always"],
+
+		"indent": [
+			"error",
+			"tab",
+			{
+				"SwitchCase": 1
+			}
+		],
+
+		"no-tabs": [
+			"error",
+			{
+				"allowIndentationTabs": true
+			}
+		],
+
+		"comma-dangle": "off",
+
+		"no-shadow": "off",
+
+		"no-console": "off",
+
+		"arrow-parens": ["error", "always"],
+		"arrow-body-style": ["error", "always"],
+		"spaced-comment": [0, "always"],
+
+		"import/extensions": [
+			"error",
+			"never",
+			{
+				"js": "never",
+				"jsx": "never",
+				"ts": "never",
+				"tsx": "never",
+				"json": "always"
+			}
+		],
+
+		"import/prefer-default-export": "off",
+
+		"class-methods-use-this": "off",
+
+		// disabled because typescript has already its own checks
+		// refer: https://stackoverflow.com/a/64197516
+		"no-undef": "off",
+
+		// this rule has been enabled specifically for TypeScript files. See the "overrides" section
+		// for details
+		"@typescript-eslint/explicit-function-return-type": "off",
+
+		// this rule has been enabled specifically for TypeScript files. See the "overrides" section
+		// for details
+		"@typescript-eslint/explicit-module-boundary-types": "off",
+
+		"@typescript-eslint/no-explicit-any": [
+			"error",
+			{
+				"fixToUnknown": false,
+				"ignoreRestArgs": false
+			}
+		],
+
+		// turned off as we're using @typescript-eslint/no-unused-vars.
+		// For more details: https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/no-unused-vars.md#how-to-use
+		"no-unused-vars": "off",
+		"@typescript-eslint/no-unused-vars": [
+			"error",
+			{
+				"vars": "all",
+				"args": "after-used",
+				"ignoreRestSiblings": false,
+				"argsIgnorePattern": "next"
+			}
+		],
+
+		"@typescript-eslint/ban-types": "off",
+
+		"@typescript-eslint/naming-convention": [
+			"error",
+			// Enforce that all variables, functions and properties follow are camelCase
+			// See: https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/naming-convention.md#enforce-that-all-variables-functions-and-properties-follow-are-camelcase
+			{"selector": "variableLike", "format": ["camelCase"]},
+
+			// Enforce that boolean variables are prefixed with an allowed verb
+			// See: https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/naming-convention.md#enforce-that-boolean-variables-are-prefixed-with-an-allowed-verb
+			{
+				"selector": "variable",
+				"types": ["boolean"],
+				"format": ["PascalCase"],
+				"prefix": ["is", "should", "has", "can", "did", "will"]
+			},
+
+			// Enforce that all const variables are either in UPPER_CASE, or PascalCase or camelCase
+			{
+				"selector": "variable",
+				"modifiers": ["const"],
+				"format": ["UPPER_CASE", "PascalCase", "camelCase"]
+			},
+
+			// Enforce that all functions are either in PascalCase or camelCase
+			{
+				"selector": "function",
+				"format": ["PascalCase", "camelCase"]
+			},
+
+			// Enforce that interface names begin with an i
+			// See: https://stackoverflow.com/a/62915767/6793156
+			{
+				"selector": "interface",
+				"format": ["camelCase"],
+				"custom": {
+					"regex": "^i[A-Z]",
+					"match": true
+				}
+			}
+		]
+	},
+	"overrides": [
+		{
+			"files": ["*.ts", "*.tsx"],
+			"rules": {
+				"@typescript-eslint/no-shadow": ["error"],
+				"no-shadow": "off",
+				"no-undef": "off"
+			}
+		},
+		{
+			// enable the rule specifically for TypeScript files
+			"files": ["*.ts", "*.tsx"],
+			"rules": {
+				"@typescript-eslint/explicit-module-boundary-types": ["error"]
+			}
+		},
+		{
+			// enable the rule specifically for TypeScript files
+			"files": ["*.ts", "*.tsx"],
+			"rules": {
+				"@typescript-eslint/explicit-function-return-type": ["error"]
+			}
+		},
+		{
+			// specifically disable particular rules for certain files.
+			"files": ["./src/db/index.ts"],
+			"rules": {
+				"no-param-reassign": ["off"],
+				"no-use-before-define": ["off"],
+				"@typescript-eslint/no-use-before-define": ["off"]
+			}
+		},
+		{
+			// specifically disable particular rules for certain files.
+			"files": ["./src/db/repositories/*"],
+			"rules": {
+				"no-useless-constructor": ["off"]
+			}
+		}
+	]
+}

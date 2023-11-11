@@ -1,0 +1,102 @@
+{
+	"name": "pluteo-js",
+	"version": "0.0.1",
+	"description": "PluteoJS Server",
+	"main": "./src/App.ts",
+	"repository": "git@gitlab.com:PluteoJS/pluteojs-template.git",
+	"author": "Muhammad Swalah A A <swalah@heedlabs.com>",
+	"private": true,
+	"packageManager": "yarn@3.5.0",
+	"scripts": {
+		"postinstall": "husky install",
+		"check-types": "tsc --noemit",
+		"eslint": "eslint . --ext .js,.jsx,.ts,.tsx",
+		"lint": "yarn eslint && yarn check-types",
+		"format": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
+		"start:dev": "nodemon",
+		"copy-to-build:sql": "copyfiles -u 1 \"./src/**/*.sql\" \"build/src\"",
+		"build": "rimraf ./build && tsc --project tsconfig.json && tsconfig-replace-paths -p tsconfig.json -s ./ -o ./build && yarn copy-to-build:sql",
+		"start:production": "yarn build && node ./build/src/App.js",
+		"inspect": "nodemon --inspect ./src/App.ts",
+		"bump-version": "npm version --no-git-tag-version",
+		"get-next-version": "ts-node ./.standard-version/commands/ComputeNextVersion.ts",
+		"release-branch": "git flow release start $(ts-node ./.standard-version/commands/ComputeNextVersion.ts)",
+		"release": "standard-version"
+	},
+	"lint-staged": {
+		"*.{js,jsx,ts,tsx}": [
+			"prettier --write",
+			"eslint --fix"
+		]
+	},
+	"standard-version": {
+		"skip": {
+			"tag": true
+		},
+		"scripts": {
+			"postcommit": "ts-node ./.standard-version/commands/FixGitFlowReleaseBranchName.ts"
+		}
+	},
+	"devDependencies": {
+		"@commitlint/cli": "^17.6.3",
+		"@commitlint/config-conventional": "^17.6.3",
+		"@types/conventional-recommended-bump": "^6.1.0",
+		"@types/cors": "^2.8.13",
+		"@types/express": "^4.17.17",
+		"@types/http-errors": "^2.0.1",
+		"@types/joi": "^17.2.3",
+		"@types/jsonwebtoken": "^9.0.2",
+		"@types/node": "^20.2.1",
+		"@types/nodemailer": "^6.4.9",
+		"@types/shelljs": "^0.8.12",
+		"@typescript-eslint/eslint-plugin": "^5.59.6",
+		"@typescript-eslint/parser": "^5.59.6",
+		"conventional-recommended-bump": "^6.1.0",
+		"copyfiles": "^2.4.1",
+		"eslint": "^8.40.0",
+		"eslint-config-airbnb-base": "^15.0.0",
+		"eslint-config-prettier": "^8.8.0",
+		"eslint-import-resolver-typescript": "^3.5.5",
+		"eslint-plugin-import": "^2.27.5",
+		"eslint-plugin-prettier": "^4.2.1",
+		"husky": "^8.0.3",
+		"lint-staged": "^13.2.2",
+		"nodemon": "^2.0.22",
+		"prettier": "^2.8.8",
+		"rimraf": "^5.0.1",
+		"semver": "^7.5.1",
+		"shelljs": "^0.8.5",
+		"simple-git": "^3.18.0",
+		"standard-version": "^9.5.0",
+		"ts-node": "^10.9.1",
+		"tsconfig-paths": "^4.2.0",
+		"tsconfig-replace-paths": "^0.0.14",
+		"typescript": "5.0.4"
+	},
+	"dependencies": {
+		"argon2": "^0.30.3",
+		"celebrate": "^15.0.1",
+		"cors": "^2.8.5",
+		"dotenv": "^16.0.3",
+		"express": "^4.18.2",
+		"express-jwt": "^8.4.1",
+		"form-data": "^4.0.0",
+		"helmet": "^7.0.0",
+		"http-errors": "^2.0.0",
+		"joi": "^17.9.2",
+		"jsonwebtoken": "^9.0.0",
+		"mailgun.js": "^8.2.1",
+		"moment-timezone": "^0.5.43",
+		"nanoid": "^3.3.5",
+		"nodemailer": "^6.9.3",
+		"pg-monitor": "^2.0.0",
+		"pg-promise": "^11.4.3",
+		"qs": "^6.11.2",
+		"winston": "^3.8.2",
+		"winston-slack-webhook-transport": "^2.3.2"
+	},
+	"volta": {
+		"node": "18.16.0",
+		"yarn": "3.5.1"
+	}
+}
