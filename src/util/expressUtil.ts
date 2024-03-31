@@ -1,5 +1,7 @@
-import {NullableString} from "@customTypes/commonTypes";
-import {iRequest} from "@customTypes/expressTypes";
+/// <reference types="@pluteojs/types/global/express" />
+
+import {NullableString} from "@pluteojs/types/modules/commonTypes";
+import {iRequest} from "@pluteojs/types/modules/expressTypes";
 import logger from "@loaders/logger";
 
 /**

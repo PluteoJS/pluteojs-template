@@ -7,7 +7,11 @@ import VerificationService from "@services/VerificationService";
 
 import expressUtil from "@util/expressUtil";
 
-import {iRequest, iResponse, RouteType} from "@customTypes/expressTypes";
+import {
+	iRequest,
+	iResponse,
+	RouteType,
+} from "@pluteojs/types/modules/expressTypes";
 import {iRequestEmailVerificationDTO} from "@customTypes/appDataTypes/verificationTypes";
 import {emailVerificationRequestBodySchema} from "@validations/verificationRouteSchema";
 

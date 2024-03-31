@@ -10,7 +10,7 @@ import emailServiceUtil from "@util/emailServiceUtil";
 import securityUtil from "@util/securityUtil";
 
 import {iUser} from "@customTypes/appDataTypes/userTypes";
-import {NullableString} from "@customTypes/commonTypes";
+import {NullableString} from "@pluteojs/types/modules/commonTypes";
 
 export default class EmailService {
 	/**

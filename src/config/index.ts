@@ -1,3 +1,5 @@
+/// <reference types="@pluteojs/types/global/node" />
+
 import fs from "fs";
 
 import dotenv from "dotenv";
@@ -22,6 +24,10 @@ if (envFile.error) {
 export default {
 	// server port
 	port: parseInt(process.env.PORT, 10),
+
+	custom: {
+		templateSpecificEnvVar: process.env.CUSTOM_TEMPLATE_SPECIFIC_ENV_VAR,
+	},
 
 	// winston logger configurations
 	logging: {

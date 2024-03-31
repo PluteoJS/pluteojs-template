@@ -3,7 +3,7 @@ import {IDatabase, IMain} from "pg-promise";
 import {iPasswordResetLogModel} from "@db/models/resetPasswordLogs.model";
 
 import {resetPasswordLogs as sql} from "@db/sql";
-import {NullableString} from "@customTypes/commonTypes";
+import {NullableString} from "@pluteojs/types/modules/commonTypes";
 /*
  This repository mixes hard-coded and dynamic SQL, just to show how to use both.
 */

@@ -3,7 +3,7 @@ import WinstonSlackHook from "winston-slack-webhook-transport";
 
 import Config from "@config";
 import {loggingLevels} from "@constants/serverConstants";
-import {NullableString} from "customTypes/commonTypes";
+import {NullableString} from "@pluteojs/types/modules/commonTypes";
 
 /**
  * Returns the path to the log file for the specified logging level.

@@ -3,7 +3,7 @@ import {IDatabase, IMain} from "pg-promise";
 import {iEmailVerificationRequestLogsModel} from "@db/models/emailVerificationRequestLogs.model";
 
 import {emailVerificationRequestLogs as sql} from "@db/sql";
-import {NullableString} from "@customTypes/commonTypes";
+import {NullableString} from "@pluteojs/types/modules/commonTypes";
 
 /*
  This repository mixes hard-coded and dynamic SQL, just to show how to use both.

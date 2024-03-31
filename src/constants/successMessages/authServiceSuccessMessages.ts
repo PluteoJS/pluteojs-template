@@ -1,4 +1,4 @@
-import {asTypeIServiceSuccess} from "@customTypes/commonServiceTypes";
+import {asTypeIServiceSuccess} from "@pluteojs/types/modules/commonServiceTypes";
 
 const authServiceSuccessMessage = asTypeIServiceSuccess({
 	passwordReset: {

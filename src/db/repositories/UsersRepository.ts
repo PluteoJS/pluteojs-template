@@ -4,7 +4,7 @@ import {IResult} from "pg-promise/typescript/pg-subset";
 import {iUserModel} from "@db/models/user.model";
 
 import {users as sql} from "@db/sql";
-import {NullableString} from "@customTypes/commonTypes";
+import {NullableString} from "@pluteojs/types/modules/commonTypes";
 
 /*
  This repository mixes hard-coded and dynamic SQL, just to show how to use both.

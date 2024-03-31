@@ -7,7 +7,13 @@ import AuthService from "@services/AuthService";
 
 import expressUtil from "@util/expressUtil";
 
-import {iRequest, iResponse, RouteType} from "@customTypes/expressTypes";
+import {
+	iRequest,
+	iResponse,
+	RouteType,
+} from "@pluteojs/types/modules/expressTypes";
+import {iServiceSuccess} from "@pluteojs/types/modules/commonServiceTypes";
+
 import {
 	renewAccessTokenBodySchema,
 	signinBodySchema,
@@ -22,7 +28,6 @@ import {
 	iResetPassRequestPayload,
 	iResetPassPayload,
 } from "@customTypes/appDataTypes/authTypes";
-import {iServiceSuccess} from "@customTypes/commonServiceTypes";
 
 const route = Router();
 const authService = new AuthService();

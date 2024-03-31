@@ -3,7 +3,7 @@ import {
 	iNormalizedObject,
 	iNormalizedObjectDetails,
 	iNormalizedObjectValueBase,
-} from "@customTypes/commonTypes";
+} from "@pluteojs/types/modules/commonTypes";
 
 /**
  * Converts properties from one object to another.

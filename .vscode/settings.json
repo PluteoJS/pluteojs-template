@@ -6,7 +6,7 @@
 	"prettier.useTabs": true,
 	"editor.formatOnPaste": true,
 	"editor.codeActionsOnSave": {
-		"source.fixAll.eslint": true
+		"source.fixAll.eslint": "explicit"
 	},
 	"eslint.validate": ["typescript", "javascript"],
 	"[javascript]": {
@@ -32,5 +32,11 @@
 		"strapi",
 		"URID",
 		"uuidv"
-	]
+	],
+	"files.exclude": {
+		"**/node_modules": false
+	},
+	"search.exclude": {
+		"**/node_modules": true
+	}
 }

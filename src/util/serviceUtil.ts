@@ -2,9 +2,9 @@ import {
 	iGenericServiceResult,
 	iResponseMeta,
 	NullableServiceError,
-} from "@customTypes/commonServiceTypes";
-import {httpStatusCodes} from "@customTypes/networkTypes";
-import {NullableString} from "@customTypes/commonTypes";
+} from "@pluteojs/types/modules/commonServiceTypes";
+import {httpStatusCodes} from "@pluteojs/types/modules/networkTypes";
+import {NullableString} from "@pluteojs/types/modules/commonTypes";
 
 /**
  * Builds result object for the route layer.

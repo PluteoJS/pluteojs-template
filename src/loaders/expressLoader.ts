@@ -10,11 +10,11 @@ import apiRoutes from "@api/index";
 import serviceUtil from "@util/serviceUtil";
 import securityUtil from "@util/securityUtil";
 
-import {httpStatusCodes} from "@customTypes/networkTypes";
+import {httpStatusCodes} from "@pluteojs/types/modules/networkTypes";
 import {
 	ValidationErrorsType,
 	iValidationErrorDetails,
-} from "@customTypes/commonServiceTypes";
+} from "@pluteojs/types/modules/commonServiceTypes";
 
 import {genericServiceErrors} from "@constants/errors/genericServiceErrors";
 

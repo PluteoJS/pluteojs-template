@@ -5,7 +5,7 @@ import {iEmailLogModel} from "db/models/emailLogs.model";
 import {emailLogs as sql} from "@db/sql";
 
 import {emailBodyTypes} from "@constants/emailServiceConstants";
-import {NullableString} from "@customTypes/commonTypes";
+import {NullableString} from "@pluteojs/types/modules/commonTypes";
 
 /*
  This repository mixes hard-coded and dynamic SQL, just to show how to use both.

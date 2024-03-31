@@ -11,15 +11,15 @@ import serviceUtil from "@util/serviceUtil";
 import verificationUtil from "@util/verificationUtil";
 import securityUtil from "@util/securityUtil";
 
-import {iGenericServiceResult} from "@customTypes/commonServiceTypes";
-import {httpStatusCodes} from "@customTypes/networkTypes";
+import {iGenericServiceResult} from "@pluteojs/types/modules/commonServiceTypes";
+import {httpStatusCodes} from "@pluteojs/types/modules/networkTypes";
 
 import {verificationServiceErrors} from "@constants/errors/verificationServiceErrors";
 import {momentUnitsOfTime} from "@constants/dateTimeConstants";
 
 import EmailService from "@services/EmailService";
 
-import {NullableString} from "@customTypes/commonTypes";
+import {NullableString} from "@pluteojs/types/modules/commonTypes";
 
 export default class VerificationService {
 	emailService = new EmailService();

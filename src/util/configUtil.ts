@@ -3,7 +3,7 @@
  * circular dependency.
  */
 import {serverModes} from "@constants/serverConstants";
-import {NullableString} from "@customTypes/commonTypes";
+import {NullableString} from "@pluteojs/types/modules/commonTypes";
 
 /**
  * Returns the appropriate envFilePath depending on the value of
