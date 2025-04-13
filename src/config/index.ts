@@ -132,6 +132,7 @@ export default {
 	},
 
 	resetPasswordConfig: {
+		otpCustomAlphabet: process.env.PASSWORD_RESET_OTP_CUSTOM_ALPHABET,
 		otpLength: Number(process.env.PASSWORD_RESET_OTP_LENGTH),
 		retryIntervalInMinutes: Number(
 			process.env.RESET_PASSWORD_RETRY_INTERVAL_IN_MINUTES

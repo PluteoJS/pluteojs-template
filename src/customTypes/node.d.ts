@@ -18,5 +18,9 @@ declare namespace NodeJS {
 		// when running on multi-core systems
 		// This is set to true by default, but can be overridden in the .env file
 		HAS_CLUSTERING_ENABLED: string;
+
+		// Reset Password Config
+		PASSWORD_RESET_OTP_CUSTOM_ALPHABET: string;
+		// Rest of the Reset Password Config types are defined in the @pluteojs/types
 	}
 }
