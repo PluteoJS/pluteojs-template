@@ -26,8 +26,12 @@ const getEnvFilePath = (): string => {
 			enfFilePath = "./.env.staging";
 			break;
 
-		default: {
+		case serverModes.DEVELOPMENT:
 			enfFilePath = "./.env.development";
+			break;
+
+		default: {
+			enfFilePath = "./.env.development.local";
 		}
 	}
 

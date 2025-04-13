@@ -10,7 +10,7 @@ import {loggingLevels, serverModes} from "@constants/serverConstants";
 import configUtil from "@util/configUtil";
 
 // set the default NODE_ENV to "development"
-process.env.NODE_ENV = process.env.NODE_ENV || serverModes.DEVELOPMENT;
+process.env.NODE_ENV = process.env.NODE_ENV || serverModes.DEVELOPMENT_LOCAL;
 
 // loading .env file
 const envFile = dotenv.config({

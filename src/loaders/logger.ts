@@ -30,11 +30,10 @@ const transports = [];
  * warnings, and info to the file and slack. We won't log anything to the console
  * in production mode.
  */
-console.log(
-	"🚀 ~ file: logger.ts:24 ~ process.env.NODE_ENV:",
-	process.env.NODE_ENV
-);
-if (process.env.NODE_ENV === serverModes.DEVELOPMENT) {
+if (
+	process.env.NODE_ENV === serverModes.DEVELOPMENT_LOCAL ||
+	process.env.NODE_ENV === serverModes.DEVELOPMENT
+) {
 	// registering the console transport
 	transports.push(createConsoleTransport());
 

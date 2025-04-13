@@ -1,4 +1,5 @@
 enum serverModes {
+	DEVELOPMENT_LOCAL = "development.local",
 	DEVELOPMENT = "development",
 	STAGING = "staging",
 	PRODUCTION = "production",
