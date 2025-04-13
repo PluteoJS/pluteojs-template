@@ -6,7 +6,7 @@
 	"repository": "git@gitlab.com:PluteoJS/pluteojs-template.git",
 	"author": "Muhammad Swalah A A <swalah@heedlabs.com>",
 	"private": true,
-	"packageManager": "yarn@3.5.0",
+	"packageManager": "yarn@4.9.0",
 	"scripts": {
 		"postinstall": "husky install",
 		"check-types": "tsc --noemit",
