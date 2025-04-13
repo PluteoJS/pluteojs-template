@@ -12,14 +12,23 @@ import configUtil from "@util/configUtil";
 // set the default NODE_ENV to "development"
 process.env.NODE_ENV = process.env.NODE_ENV || serverModes.DEVELOPMENT_LOCAL;
 
+// setting the env_file path
+const envFilePath = configUtil.getEnvFilePath();
+
 // loading .env file
 const envFile = dotenv.config({
-	path: configUtil.getEnvFilePath(),
+	path: envFilePath,
 });
 
 if (envFile.error) {
 	throw new Error("⚠️ Couldn't find .env file ⚠️");
 }
+
+// Print the current server environment mode
+console.log(`\n🌍 Server is running in "${process.env.NODE_ENV}" mode.`);
+
+// Print env configuration loading status to console
+console.log(`⚙️  Environment variables loaded from "${envFilePath}" file.\n`);
 
 export default {
 	// server port
