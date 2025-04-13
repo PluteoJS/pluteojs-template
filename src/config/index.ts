@@ -7,7 +7,7 @@ import {Algorithm} from "jsonwebtoken";
 
 import {loggingLevels, serverModes} from "@constants/serverConstants";
 
-import configUtil from "@util/configUtil";
+import configUtil, {convertDurationToMs} from "@util/configUtil";
 
 // set the default NODE_ENV to "development"
 process.env.NODE_ENV = process.env.NODE_ENV || serverModes.DEVELOPMENT_LOCAL;
@@ -78,8 +78,12 @@ export default {
 
 	jwtConfig: {
 		algorithm: process.env.JWT_ALGORITHM as Algorithm,
-		accessTokenExpiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN,
-		refreshTokenExpiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN,
+		accessTokenExpiresIn: convertDurationToMs(
+			process.env.JWT_ACCESS_TOKEN_EXPIRES_IN
+		),
+		refreshTokenExpiresIn: convertDurationToMs(
+			process.env.JWT_REFRESH_TOKEN_EXPIRES_IN
+		),
 		secretKey: fs.readFileSync(process.env.JWT_SECRET_KEY_FILE_PATH),
 	},
 
