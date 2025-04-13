@@ -97,7 +97,7 @@
 		"winston-slack-webhook-transport": "^2.3.2"
 	},
 	"volta": {
-		"node": "18.16.0",
-		"yarn": "3.5.1"
+		"node": "22.14.0",
+		"yarn": "4.9.0"
 	}
 }
