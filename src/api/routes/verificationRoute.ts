@@ -1,4 +1,5 @@
-import {NextFunction, Router} from "express";
+import type {NextFunction} from "express";
+import {Router} from "express";
 import {celebrate, Segments} from "celebrate";
 
 import logger from "@loaders/logger";
@@ -7,12 +8,12 @@ import VerificationService from "@services/VerificationService";
 
 import expressUtil from "@util/expressUtil";
 
-import {
+import type {
 	iRequest,
 	iResponse,
 	RouteType,
 } from "@pluteojs/types/modules/expressTypes";
-import {iRequestEmailVerificationDTO} from "@customTypes/appDataTypes/verificationTypes";
+import type {iRequestEmailVerificationDTO} from "@customTypes/appDataTypes/verificationTypes";
 import {emailVerificationRequestBodySchema} from "@validations/verificationRouteSchema";
 
 const route = Router();
@@ -64,7 +65,9 @@ const verificationRoute: RouteType = (apiRouter) => {
 					}
 				);
 
-				return res.status(httpStatusCode).json(result);
+				res.status(httpStatusCode).json(result);
+
+				return;
 			} catch (error) {
 				logger.error(
 					uniqueRequestId,
@@ -72,7 +75,9 @@ const verificationRoute: RouteType = (apiRouter) => {
 					error
 				);
 
-				return next(error);
+				next(error);
+
+				return;
 			}
 		}
 	);

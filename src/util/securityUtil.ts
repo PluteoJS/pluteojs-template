@@ -6,8 +6,11 @@ import logger from "@loaders/logger";
 
 import config from "@config";
 
-import {iJWTPayload, iTokenPair} from "@customTypes/appDataTypes/authTypes";
-import {NullableString} from "@pluteojs/types/modules/commonTypes";
+import type {
+	iJWTPayload,
+	iTokenPair,
+} from "@customTypes/appDataTypes/authTypes";
+import type {NullableString} from "@pluteojs/types/modules/commonTypes";
 
 /**
  * Generates and returns a v4 uuid using the crypto.randomUUID.

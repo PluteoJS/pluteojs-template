@@ -4,7 +4,7 @@ import PackageJSON from "../../package.json";
  * Returns the current version from package.json.
  * @returns - The current version.
  */
-function getCurrentVersion() {
+function getCurrentVersion(): string {
 	return PackageJSON.version;
 }
 

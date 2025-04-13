@@ -2,8 +2,9 @@
  * NOTE: Please don't import "@config" to this file as it will cause
  * circular dependency.
  */
+
 import {serverModes} from "@constants/serverConstants";
-import {NullableString} from "@pluteojs/types/modules/commonTypes";
+import type {NullableString} from "@pluteojs/types/modules/commonTypes";
 
 /**
  * Returns the appropriate envFilePath depending on the value of
@@ -26,8 +27,12 @@ const getEnvFilePath = (): string => {
 			enfFilePath = "./.env.staging";
 			break;
 
-		default: {
+		case serverModes.DEVELOPMENT:
 			enfFilePath = "./.env.development";
+			break;
+
+		default: {
+			enfFilePath = "./.env.development.local";
 		}
 	}
 

@@ -1,6 +1,7 @@
 import {join as joinPath} from "path";
 
-import {QueryFile, IQueryFileOptions} from "pg-promise";
+import type {IQueryFileOptions} from "pg-promise";
+import {QueryFile} from "pg-promise";
 
 import logger from "@loaders/logger";
 

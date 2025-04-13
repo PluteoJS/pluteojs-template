@@ -1,9 +1,9 @@
-import {IDatabase, IMain} from "pg-promise";
+import type {IDatabase, IMain} from "pg-promise";
 
-import {iEmailVerificationRequestLogsModel} from "@db/models/emailVerificationRequestLogs.model";
+import type {iEmailVerificationRequestLogsModel} from "@db/models/emailVerificationRequestLogs.model";
 
 import {emailVerificationRequestLogs as sql} from "@db/sql";
-import {NullableString} from "@pluteojs/types/modules/commonTypes";
+import type {NullableString} from "@pluteojs/types/modules/commonTypes";
 
 /*
  This repository mixes hard-coded and dynamic SQL, just to show how to use both.
@@ -21,8 +21,11 @@ export default class EmailVerificationRequestLogsRepository {
 	 * Library's root, if ever needed, like to access 'helpers'
 	 * or other namespaces available from the root.
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	constructor(private db: IDatabase<any>, private pgp: IMain) {
+	constructor(
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		private readonly db: IDatabase<any>,
+		private readonly pgp: IMain
+	) {
 		/*
           If your repository needs to use helpers like ColumnSet,
           you should create it conditionally, inside the constructor,

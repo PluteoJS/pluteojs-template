@@ -1,4 +1,4 @@
-import {TokenGetter} from "express-jwt";
+import type {TokenGetter} from "express-jwt";
 
 /**
  * Retrieves the Bearer JWT from the request authorization header.

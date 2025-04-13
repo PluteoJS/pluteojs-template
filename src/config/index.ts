@@ -3,30 +3,54 @@
 import fs from "fs";
 
 import dotenv from "dotenv";
-import {Algorithm} from "jsonwebtoken";
+import type {Algorithm} from "jsonwebtoken";
 
 import {loggingLevels, serverModes} from "@constants/serverConstants";
 
 import configUtil from "@util/configUtil";
+import typeUtil from "util/typeUtil";
 
 // set the default NODE_ENV to "development"
-process.env.NODE_ENV = process.env.NODE_ENV || serverModes.DEVELOPMENT;
+process.env.NODE_ENV = process.env.NODE_ENV || serverModes.DEVELOPMENT_LOCAL;
+
+// setting the env_file path
+const envFilePath = configUtil.getEnvFilePath();
 
 // loading .env file
 const envFile = dotenv.config({
-	path: configUtil.getEnvFilePath(),
+	path: envFilePath,
 });
 
 if (envFile.error) {
 	throw new Error("⚠️ Couldn't find .env file ⚠️");
 }
 
+// Print the current server environment mode
+console.log(`\n🌍 Server is running in "${process.env.NODE_ENV}" mode.`);
+
+// Print env configuration loading status to console
+console.log(`⚙️  Environment variables loaded from "${envFilePath}" file.\n`);
+
 export default {
+	// Example of a custom template specific env variable
+	// This is just an example and should be replaced with your own custom env variable
+	custom: {
+		templateSpecificEnvVar: process.env.CUSTOM_TEMPLATE_SPECIFIC_ENV_VAR,
+	},
+
+	// Service info
+	serviceInfo: {
+		name: process.env.SERVICE_NAME,
+	},
+
 	// server port
 	port: parseInt(process.env.PORT, 10),
 
-	custom: {
-		templateSpecificEnvVar: process.env.CUSTOM_TEMPLATE_SPECIFIC_ENV_VAR,
+	// clustering
+	clusterOptions: {
+		hasClusteringEnabled: typeUtil.parseBooleanFromString(
+			process.env.HAS_CLUSTERING_ENABLED
+		),
 	},
 
 	// winston logger configurations
@@ -69,8 +93,12 @@ export default {
 
 	jwtConfig: {
 		algorithm: process.env.JWT_ALGORITHM as Algorithm,
-		accessTokenExpiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN,
-		refreshTokenExpiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN,
+		accessTokenExpiresIn: typeUtil.convertDurationToMs(
+			process.env.JWT_ACCESS_TOKEN_EXPIRES_IN
+		),
+		refreshTokenExpiresIn: typeUtil.convertDurationToMs(
+			process.env.JWT_REFRESH_TOKEN_EXPIRES_IN
+		),
 		secretKey: fs.readFileSync(process.env.JWT_SECRET_KEY_FILE_PATH),
 	},
 

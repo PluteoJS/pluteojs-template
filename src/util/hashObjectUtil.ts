@@ -1,4 +1,4 @@
-import {
+import type {
 	PropertyMapping,
 	iNormalizedObject,
 	iNormalizedObjectDetails,
@@ -41,7 +41,7 @@ function convertProperties<SourceType, TargetType>(
  */
 function normalizeArrayOfObjects<
 	SourceType extends iNormalizedObjectValueBase,
-	TargetType extends iNormalizedObjectValueBase
+	TargetType extends iNormalizedObjectValueBase,
 >(
 	objectArray: SourceType[],
 	propertyMap: PropertyMapping<SourceType, TargetType>

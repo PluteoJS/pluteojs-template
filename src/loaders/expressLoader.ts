@@ -11,23 +11,34 @@ import serviceUtil from "@util/serviceUtil";
 import securityUtil from "@util/securityUtil";
 
 import {httpStatusCodes} from "@pluteojs/types/modules/networkTypes";
-import {
+import type {
 	ValidationErrorsType,
 	iValidationErrorDetails,
 } from "@pluteojs/types/modules/commonServiceTypes";
 
 import {genericServiceErrors} from "@constants/errors/genericServiceErrors";
 
-import Joi from "joi";
+import type Joi from "joi";
 import PackageJSON from "../../package.json";
 
 /**
  * Adds a unique request id to each request.
+ *
+ * This is useful for tracking requests in logs and debugging.
+ *
  * @param req
  * @param res
  * @param next
  */
 const addRequestId: RequestHandler = (req, res, next) => {
+	/**
+	 * The no-param-reassign rule has been disabled for the next line as this is
+	 * a special case to set the configuration for the request.
+	 *
+	 * We are using a custom middleware to add a unique request id to each
+	 * request. This is useful for tracking requests in logs and debugging.
+	 */
+	// eslint-disable-next-line no-param-reassign
 	req.uniqueRequestId = securityUtil.generateUUID();
 
 	next();
@@ -52,7 +63,9 @@ const resourceNotFoundHandler: RequestHandler = (req, res) => {
 
 	const {httpStatusCode} = result;
 
-	return res.status(httpStatusCode).json(result);
+	res.status(httpStatusCode).json(result);
+
+	return;
 };
 
 /**
@@ -71,7 +84,9 @@ const celebrateValidationErrorHandler: ErrorRequestHandler = (
 	next
 ) => {
 	if (!isCelebrateError(err)) {
-		return next(err);
+		next(err);
+
+		return;
 	}
 
 	const validationErrors: ValidationErrorsType = Array.from(
@@ -105,10 +120,9 @@ const celebrateValidationErrorHandler: ErrorRequestHandler = (
 		null
 	);
 
-	return res
-		.status(httpStatusCodes.CLIENT_ERROR_BAD_REQUEST)
-		.json(result)
-		.end();
+	res.status(httpStatusCodes.CLIENT_ERROR_BAD_REQUEST).json(result).end();
+
+	return;
 };
 
 /**
@@ -136,10 +150,14 @@ const unAuthorizedErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
 
 		const {httpStatusCode} = result;
 
-		return res.status(httpStatusCode).json(result).end();
+		res.status(httpStatusCode).json(result).end();
+
+		return;
 	}
 
-	return next(err);
+	next(err);
+
+	return;
 };
 
 /**
@@ -161,7 +179,9 @@ const genericErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
 
 	const {httpStatusCode} = result;
 
-	return res.status(httpStatusCode).json(result).end();
+	res.status(httpStatusCode).json(result).end();
+
+	return;
 };
 
 /**
@@ -174,7 +194,7 @@ const rootRequestHandler: RequestHandler = (req, res) => {
 	const {uniqueRequestId} = req;
 
 	const data = {
-		name: PackageJSON.name,
+		name: config.serviceInfo.name,
 		version: PackageJSON.version,
 	};
 
@@ -188,7 +208,9 @@ const rootRequestHandler: RequestHandler = (req, res) => {
 
 	const {httpStatusCode} = result;
 
-	return res.status(httpStatusCode).json(result).end();
+	res.status(httpStatusCode).json(result).end();
+
+	return;
 };
 
 /**
@@ -216,7 +238,9 @@ const statusRequestHandler: RequestHandler = (req, res) => {
 
 	const {httpStatusCode} = result;
 
-	return res.status(httpStatusCode).json(result).end();
+	res.status(httpStatusCode).json(result).end();
+
+	return;
 };
 
 /**

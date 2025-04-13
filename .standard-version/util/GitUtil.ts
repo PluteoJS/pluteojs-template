@@ -130,8 +130,6 @@ async function deleteRemoteBranch(branchName: string): Promise<void> {
 async function deleteGitBranchLocallyAndRemotely(
 	branchName: string
 ): Promise<void> {
-	const simpleGit = SimpleGit();
-
 	try {
 		const isBranchExistsInLocal = await checkIfBranchExistsInLocal(branchName);
 
@@ -174,9 +172,8 @@ async function renameGitBranch(
 			return;
 		}
 
-		const isBranchExistsInLocal = await checkIfBranchExistsInLocal(
-			currentBranchName
-		);
+		const isBranchExistsInLocal =
+			await checkIfBranchExistsInLocal(currentBranchName);
 
 		if (!isBranchExistsInLocal) {
 			console.error(

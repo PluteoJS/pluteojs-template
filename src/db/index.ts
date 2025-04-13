@@ -6,10 +6,11 @@
  * 1. Solution for ts(2349): https://stackoverflow.com/a/67086460/6793156
  *
  */
-import pgPromise, {IInitOptions, IDatabase, IMain} from "pg-promise";
+import type {IInitOptions, IDatabase, IMain} from "pg-promise";
+import pgPromise from "pg-promise";
 
+import type {iDBInterfaceExtensions} from "@db/repositories/index";
 import {
-	iDBInterfaceExtensions,
 	UsersRepository,
 	EmailLogsRepository,
 	ResetPasswordRepository,
