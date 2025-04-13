@@ -64,7 +64,9 @@ const verificationRoute: RouteType = (apiRouter) => {
 					}
 				);
 
-				return res.status(httpStatusCode).json(result);
+				res.status(httpStatusCode).json(result);
+
+				return;
 			} catch (error) {
 				logger.error(
 					uniqueRequestId,
@@ -72,7 +74,9 @@ const verificationRoute: RouteType = (apiRouter) => {
 					error
 				);
 
-				return next(error);
+				next(error);
+
+				return;
 			}
 		}
 	);

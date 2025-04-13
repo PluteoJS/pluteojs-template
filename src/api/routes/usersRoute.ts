@@ -63,11 +63,15 @@ const userRoute: RouteType = (apiRouter) => {
 
 				const {httpStatusCode} = result;
 
-				return res.status(httpStatusCode).json(result);
+				res.status(httpStatusCode).json(result);
+
+				return;
 			} catch (error) {
 				logger.error(uniqueRequestId, "Error on GET:/users:", error);
 
-				return next(error);
+				next(error);
+
+				return;
 			}
 		}
 	);

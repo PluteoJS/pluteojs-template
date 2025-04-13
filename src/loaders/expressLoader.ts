@@ -52,7 +52,9 @@ const resourceNotFoundHandler: RequestHandler = (req, res) => {
 
 	const {httpStatusCode} = result;
 
-	return res.status(httpStatusCode).json(result);
+	res.status(httpStatusCode).json(result);
+
+	return;
 };
 
 /**
@@ -71,7 +73,9 @@ const celebrateValidationErrorHandler: ErrorRequestHandler = (
 	next
 ) => {
 	if (!isCelebrateError(err)) {
-		return next(err);
+		next(err);
+
+		return;
 	}
 
 	const validationErrors: ValidationErrorsType = Array.from(
@@ -105,10 +109,9 @@ const celebrateValidationErrorHandler: ErrorRequestHandler = (
 		null
 	);
 
-	return res
-		.status(httpStatusCodes.CLIENT_ERROR_BAD_REQUEST)
-		.json(result)
-		.end();
+	res.status(httpStatusCodes.CLIENT_ERROR_BAD_REQUEST).json(result).end();
+
+	return;
 };
 
 /**
@@ -136,10 +139,14 @@ const unAuthorizedErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
 
 		const {httpStatusCode} = result;
 
-		return res.status(httpStatusCode).json(result).end();
+		res.status(httpStatusCode).json(result).end();
+
+		return;
 	}
 
-	return next(err);
+	next(err);
+
+	return;
 };
 
 /**
@@ -161,7 +168,9 @@ const genericErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
 
 	const {httpStatusCode} = result;
 
-	return res.status(httpStatusCode).json(result).end();
+	res.status(httpStatusCode).json(result).end();
+
+	return;
 };
 
 /**
@@ -188,7 +197,9 @@ const rootRequestHandler: RequestHandler = (req, res) => {
 
 	const {httpStatusCode} = result;
 
-	return res.status(httpStatusCode).json(result).end();
+	res.status(httpStatusCode).json(result).end();
+
+	return;
 };
 
 /**
@@ -216,7 +227,9 @@ const statusRequestHandler: RequestHandler = (req, res) => {
 
 	const {httpStatusCode} = result;
 
-	return res.status(httpStatusCode).json(result).end();
+	res.status(httpStatusCode).json(result).end();
+
+	return;
 };
 
 /**

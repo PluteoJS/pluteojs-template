@@ -205,6 +205,15 @@
 			"rules": {
 				"no-useless-constructor": ["off"]
 			}
+		},
+		{
+			"files": [
+				"./src/loaders/expressLoader.ts",
+				"src/api/routes/*Route.ts"
+			],
+			"rules": {
+				"no-useless-return": ["off"]
+			}
 		}
 	]
 }

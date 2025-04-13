@@ -75,11 +75,15 @@ const authRoute: RouteType = (apiRouter) => {
 					}
 				);
 
-				return res.status(httpStatusCode).json(result);
+				res.status(httpStatusCode).json(result);
+
+				return;
 			} catch (error) {
 				logger.error(uniqueRequestId, "Error on POST:/auth/signup:", error);
 
-				return next(error);
+				next(error);
+
+				return;
 			}
 		}
 	);
@@ -126,11 +130,15 @@ const authRoute: RouteType = (apiRouter) => {
 					}
 				);
 
-				return res.status(httpStatusCode).json(result);
+				res.status(httpStatusCode).json(result);
+
+				return;
 			} catch (error) {
 				logger.error(uniqueRequestId, "Error on POST:/auth/signin:", error);
 
-				return next(error);
+				next(error);
+
+				return;
 			}
 		}
 	);
@@ -177,7 +185,9 @@ const authRoute: RouteType = (apiRouter) => {
 					}
 				);
 
-				return res.status(httpStatusCode).json(result);
+				res.status(httpStatusCode).json(result);
+
+				return;
 			} catch (error) {
 				logger.error(
 					uniqueRequestId,
@@ -185,7 +195,9 @@ const authRoute: RouteType = (apiRouter) => {
 					error
 				);
 
-				return next(error);
+				next(error);
+
+				return;
 			}
 		}
 	);
@@ -232,7 +244,9 @@ const authRoute: RouteType = (apiRouter) => {
 					}
 				);
 
-				return res.status(httpStatusCode).json(result);
+				res.status(httpStatusCode).json(result);
+
+				return;
 			} catch (error) {
 				logger.error(
 					uniqueRequestId,
@@ -240,7 +254,9 @@ const authRoute: RouteType = (apiRouter) => {
 					error
 				);
 
-				return next(error);
+				next(error);
+
+				return;
 			}
 		}
 	);
@@ -287,7 +303,9 @@ const authRoute: RouteType = (apiRouter) => {
 					}
 				);
 
-				return res.status(httpStatusCode).json(result);
+				res.status(httpStatusCode).json(result);
+
+				return;
 			} catch (error) {
 				logger.error(
 					uniqueRequestId,
@@ -295,7 +313,9 @@ const authRoute: RouteType = (apiRouter) => {
 					error
 				);
 
-				return next(error);
+				next(error);
+
+				return;
 			}
 		}
 	);
