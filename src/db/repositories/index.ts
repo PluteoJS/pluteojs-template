@@ -1,4 +1,4 @@
-import pgPromise from "pg-promise";
+import type pgPromise from "pg-promise";
 
 import UsersRepository from "./UsersRepository";
 import EmailLogsRepository from "./EmailLogsRepository";

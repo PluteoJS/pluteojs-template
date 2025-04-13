@@ -3,7 +3,7 @@
 import fs from "fs";
 
 import dotenv from "dotenv";
-import {Algorithm} from "jsonwebtoken";
+import type {Algorithm} from "jsonwebtoken";
 
 import {loggingLevels, serverModes} from "@constants/serverConstants";
 

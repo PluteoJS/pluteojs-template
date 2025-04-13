@@ -1,7 +1,7 @@
 import {getCurrentBranchName, renameGitBranch} from "../util/GitUtil";
 import {getCurrentVersion} from "../util/PackageJsonUtil";
 
-async function fixGitFlowReleaseBranchName() {
+async function fixGitFlowReleaseBranchName(): Promise<void> {
 	const currentBranch = await getCurrentBranchName();
 	const currentVersion = getCurrentVersion();
 
@@ -24,4 +24,4 @@ async function fixGitFlowReleaseBranchName() {
 	}
 }
 
-fixGitFlowReleaseBranchName();
+void fixGitFlowReleaseBranchName();

@@ -2,10 +2,11 @@
  * NOTE: Please don't import "@config" to this file as it will cause
  * circular dependency.
  */
-import ms, {StringValue} from "ms";
+import type {StringValue} from "ms";
+import ms from "ms";
 
 import {serverModes} from "@constants/serverConstants";
-import {NullableString} from "@pluteojs/types/modules/commonTypes";
+import type {NullableString} from "@pluteojs/types/modules/commonTypes";
 
 /**
  * Returns the appropriate envFilePath depending on the value of

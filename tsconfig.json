@@ -81,6 +81,15 @@
 		a casing different from the casing on disk*/
 	},
 
+	"include": [
+		"**/*.ts",
+		"**/*.tsx",
+		"./.standard-version/**/*.ts",
+		".prettierrc.js",
+		"commitlint.config.js",
+		"ecosystem-*.config.js"
+	],
+
 	"exclude": [
 		"strapi-admin",
 		"docs",

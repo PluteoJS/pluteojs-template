@@ -1,9 +1,9 @@
 import nodemailer from "nodemailer";
-import SMTPTransport from "nodemailer/lib/smtp-transport";
+import type SMTPTransport from "nodemailer/lib/smtp-transport";
 
 import config from "@config";
 
-import {NullableString} from "@pluteojs/types/modules/commonTypes";
+import type {NullableString} from "@pluteojs/types/modules/commonTypes";
 
 const transactionEmailTransporter = nodemailer.createTransport({
 	host: config.emailService.transactionalEmail.smtpHost,

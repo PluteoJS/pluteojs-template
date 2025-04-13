@@ -1,6 +1,7 @@
 /// <reference types="@pluteojs/types/global/express" />
 
-import {NextFunction, Router} from "express";
+import type {NextFunction} from "express";
+import {Router} from "express";
 
 import logger from "@loaders/logger";
 
@@ -10,12 +11,12 @@ import UsersService from "@services/UsersService";
 
 import expressUtil from "@util/expressUtil";
 
-import {
+import type {
 	iRequest,
 	iResponse,
 	RouteType,
 } from "@pluteojs/types/modules/expressTypes";
-import {iUser} from "@customTypes/appDataTypes/userTypes";
+import type {iUser} from "@customTypes/appDataTypes/userTypes";
 
 const route = Router();
 const userService = new UsersService();

@@ -11,13 +11,13 @@ import config from "@config";
 import securityUtil from "@util/securityUtil";
 import serviceUtil from "@util/serviceUtil";
 
-import {
+import type {
 	iGenericServiceResult,
 	NullableServiceSuccess,
 } from "@pluteojs/types/modules/commonServiceTypes";
 import {httpStatusCodes} from "@pluteojs/types/modules/networkTypes";
-import {iTokenPair} from "@customTypes/appDataTypes/authTypes";
-import {iUser, iUserInputDTO} from "@customTypes/appDataTypes/userTypes";
+import type {iTokenPair} from "@customTypes/appDataTypes/authTypes";
+import type {iUser, iUserInputDTO} from "@customTypes/appDataTypes/userTypes";
 
 import {authServiceErrors} from "@constants/errors/authServiceErrors";
 import {authServiceSuccessMessage} from "@constants/successMessages/authServiceSuccessMessages";
@@ -25,7 +25,7 @@ import {momentUnitsOfTime} from "@constants/dateTimeConstants";
 
 import EmailService from "@services/EmailService";
 
-import {NullableString} from "@pluteojs/types/modules/commonTypes";
+import type {NullableString} from "@pluteojs/types/modules/commonTypes";
 
 export default class AuthService {
 	emailService = new EmailService();

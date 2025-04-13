@@ -11,23 +11,34 @@ import serviceUtil from "@util/serviceUtil";
 import securityUtil from "@util/securityUtil";
 
 import {httpStatusCodes} from "@pluteojs/types/modules/networkTypes";
-import {
+import type {
 	ValidationErrorsType,
 	iValidationErrorDetails,
 } from "@pluteojs/types/modules/commonServiceTypes";
 
 import {genericServiceErrors} from "@constants/errors/genericServiceErrors";
 
-import Joi from "joi";
+import type Joi from "joi";
 import PackageJSON from "../../package.json";
 
 /**
  * Adds a unique request id to each request.
+ *
+ * This is useful for tracking requests in logs and debugging.
+ *
  * @param req
  * @param res
  * @param next
  */
 const addRequestId: RequestHandler = (req, res, next) => {
+	/**
+	 * The no-param-reassign rule has been disabled for the next line as this is
+	 * a special case to set the configuration for the request.
+	 *
+	 * We are using a custom middleware to add a unique request id to each
+	 * request. This is useful for tracking requests in logs and debugging.
+	 */
+	// eslint-disable-next-line no-param-reassign
 	req.uniqueRequestId = securityUtil.generateUUID();
 
 	next();

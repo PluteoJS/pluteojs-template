@@ -1,11 +1,11 @@
-import {IDatabase, IMain} from "pg-promise";
+import type {IDatabase, IMain} from "pg-promise";
 
-import {iEmailLogModel} from "db/models/emailLogs.model";
+import type {iEmailLogModel} from "db/models/emailLogs.model";
 
 import {emailLogs as sql} from "@db/sql";
 
-import {emailBodyTypes} from "@constants/emailServiceConstants";
-import {NullableString} from "@pluteojs/types/modules/commonTypes";
+import type {emailBodyTypes} from "@constants/emailServiceConstants";
+import type {NullableString} from "@pluteojs/types/modules/commonTypes";
 
 /*
  This repository mixes hard-coded and dynamic SQL, just to show how to use both.
@@ -23,8 +23,11 @@ export default class EmailLogsRepository {
 	 * Library's root, if ever needed, like to access 'helpers'
 	 * or other namespaces available from the root.
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	constructor(private db: IDatabase<any>, private pgp: IMain) {
+	constructor(
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		private readonly db: IDatabase<any>,
+		private readonly pgp: IMain
+	) {
 		/*
           If your repository needs to use helpers like ColumnSet,
           you should create it conditionally, inside the constructor,

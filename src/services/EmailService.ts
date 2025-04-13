@@ -1,6 +1,6 @@
 import logger from "@loaders/logger";
 
-import {DBTaskType} from "@db/repositories";
+import type {DBTaskType} from "@db/repositories";
 
 import config from "@config";
 
@@ -9,8 +9,8 @@ import {emailBodyTypes} from "@constants/emailServiceConstants";
 import emailServiceUtil from "@util/emailServiceUtil";
 import securityUtil from "@util/securityUtil";
 
-import {iUser} from "@customTypes/appDataTypes/userTypes";
-import {NullableString} from "@pluteojs/types/modules/commonTypes";
+import type {iUser} from "@customTypes/appDataTypes/userTypes";
+import type {NullableString} from "@pluteojs/types/modules/commonTypes";
 
 export default class EmailService {
 	/**

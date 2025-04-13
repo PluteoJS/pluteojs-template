@@ -4,12 +4,12 @@ import {db} from "@db/index";
 
 import serviceUtil from "@util/serviceUtil";
 
-import {iGenericServiceResult} from "@pluteojs/types/modules/commonServiceTypes";
+import type {iGenericServiceResult} from "@pluteojs/types/modules/commonServiceTypes";
 import {httpStatusCodes} from "@pluteojs/types/modules/networkTypes";
-import {iUser} from "@customTypes/appDataTypes/userTypes";
+import type {iUser} from "@customTypes/appDataTypes/userTypes";
 
 import {usersServiceError} from "@constants/errors/usersServiceErrors";
-import {NullableString} from "@pluteojs/types/modules/commonTypes";
+import type {NullableString} from "@pluteojs/types/modules/commonTypes";
 
 export default class UsersService {
 	public async getUserDetails(

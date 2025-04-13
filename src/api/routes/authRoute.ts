@@ -1,4 +1,5 @@
-import {NextFunction, Router} from "express";
+import type {NextFunction} from "express";
+import {Router} from "express";
 import {celebrate, Segments} from "celebrate";
 
 import logger from "@loaders/logger";
@@ -7,12 +8,12 @@ import AuthService from "@services/AuthService";
 
 import expressUtil from "@util/expressUtil";
 
-import {
+import type {
 	iRequest,
 	iResponse,
 	RouteType,
 } from "@pluteojs/types/modules/expressTypes";
-import {iServiceSuccess} from "@pluteojs/types/modules/commonServiceTypes";
+import type {iServiceSuccess} from "@pluteojs/types/modules/commonServiceTypes";
 
 import {
 	renewAccessTokenBodySchema,
@@ -21,8 +22,8 @@ import {
 	resetPasswordRequestSchema,
 	resetPasswordBodySchema,
 } from "@validations/authRouteSchemas";
-import {iUser, iUserInputDTO} from "@customTypes/appDataTypes/userTypes";
-import {
+import type {iUser, iUserInputDTO} from "@customTypes/appDataTypes/userTypes";
+import type {
 	iCredentials,
 	iTokenPair,
 	iResetPassRequestPayload,

@@ -3,7 +3,7 @@ import moment from "moment-timezone";
 import logger from "@loaders/logger";
 
 import {db} from "@db/index";
-import {DBTaskType} from "@db/repositories";
+import type {DBTaskType} from "@db/repositories";
 
 import config from "@config";
 
@@ -11,7 +11,7 @@ import serviceUtil from "@util/serviceUtil";
 import verificationUtil from "@util/verificationUtil";
 import securityUtil from "@util/securityUtil";
 
-import {iGenericServiceResult} from "@pluteojs/types/modules/commonServiceTypes";
+import type {iGenericServiceResult} from "@pluteojs/types/modules/commonServiceTypes";
 import {httpStatusCodes} from "@pluteojs/types/modules/networkTypes";
 
 import {verificationServiceErrors} from "@constants/errors/verificationServiceErrors";
@@ -19,7 +19,7 @@ import {momentUnitsOfTime} from "@constants/dateTimeConstants";
 
 import EmailService from "@services/EmailService";
 
-import {NullableString} from "@pluteojs/types/modules/commonTypes";
+import type {NullableString} from "@pluteojs/types/modules/commonTypes";
 
 export default class VerificationService {
 	emailService = new EmailService();

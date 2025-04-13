@@ -1,7 +1,7 @@
 import os = require("os");
 
 import * as pgMonitor from "pg-monitor";
-import {IInitOptions} from "pg-promise";
+import type {IInitOptions} from "pg-promise";
 
 import logger from "@loaders/logger";
 import appUtil from "@util/appUtil";
@@ -57,7 +57,7 @@ pgMonitor.setLog((msg, info) => {
 			a special case to set the configuration for pg-monitor.
 		 */
 		// eslint-disable-next-line no-param-reassign
-		info.display = false; //
+		info.display = false;
 	}
 });
 

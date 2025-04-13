@@ -1,5 +1,0 @@
-# Ignore artifacts:
-build
-
-# Ignore strapi-admin
-strapi-admin

@@ -2,7 +2,6 @@ import ConventionalRecommendedBump from "conventional-recommended-bump";
 import SemVer from "semver";
 
 import {getCurrentVersion} from "../util/PackageJsonUtil";
-import {error} from "console";
 
 /**
  * Computes the next version based on the current version and the conventional recommended bump.
