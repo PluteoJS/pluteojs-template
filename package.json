@@ -8,7 +8,6 @@
 	"private": true,
 	"packageManager": "yarn@4.9.0",
 	"scripts": {
-		"postinstall": "husky install",
 		"check-types": "tsc --noemit",
 		"eslint": "eslint . --ext .js,.jsx,.ts,.tsx",
 		"lint": "yarn eslint && yarn check-types",
