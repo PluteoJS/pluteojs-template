@@ -194,7 +194,7 @@ const rootRequestHandler: RequestHandler = (req, res) => {
 	const {uniqueRequestId} = req;
 
 	const data = {
-		name: PackageJSON.name,
+		name: config.serviceInfo.name,
 		version: PackageJSON.version,
 	};
 
