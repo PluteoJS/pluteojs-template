@@ -127,7 +127,9 @@ dist
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 
-# yarn v2
+# Yarn 3 without Zero-Install
+# Refer https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
+.pnp.*
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
@@ -135,10 +137,8 @@ dist
 !.yarn/sdks
 !.yarn/versions
 
-# Swap the comments on the following lines if you don't wish to use zero-installs
-# Documentation here: https://yarnpkg.com/features/zero-installs
-!.yarn/cache
-#.pnp.*
+# Since we are using yarn 3, we shouldn't track package-lock.json
+package-lock.json
 
 ### Node Patch ###
 # Serverless Webpack directories
