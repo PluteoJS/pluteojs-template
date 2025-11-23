@@ -1,5 +1,5 @@
 {
-    "name": "turbo-repo-donor",
+    "name": "pluteo-js-template",
     "private": true,
     "scripts": {
         "build": "turbo run build",
