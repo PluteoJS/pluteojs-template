@@ -5,20 +5,21 @@
     }
   ],
   "cSpell.words": [
-    "pluteo",
     "commitlint",
-		"copyfiles",
-		"heedlabs",
-		"jwtid",
-		"mailgun",
-		"middlewares",
-		"noemit",
-		"Pluteo",
-		"pluteojs",
-		"postcommit",
-		"signin",
-		"strapi",
-		"URID",
-		"uuidv"
+    "copyfiles",
+    "heedlabs",
+    "jwtid",
+    "mailgun",
+    "middlewares",
+    "noemit",
+    "pluteo",
+    "Pluteo",
+    "pluteojs",
+    "postcommit",
+    "signin",
+    "strapi",
+    "Turborepo",
+    "URID",
+    "uuidv"
   ]
 }
