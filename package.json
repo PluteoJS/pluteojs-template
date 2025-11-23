@@ -6,9 +6,9 @@
 	"repository": "git@gitlab.com:PluteoJS/pluteojs-template.git",
 	"author": "Muhammad Swalah A A <swalah@heedlabs.com>",
 	"scripts": {
-        "preinstall": "node ./scripts/enforce-pnpm.mjs",
+		"preinstall": "node ./scripts/enforce-pnpm.mjs",
 		"enforce-pnpm:sync": "node ./scripts/sync-pnpm-preinstall.mjs",
-        "prepare": "husky",
+		"prepare": "husky",
 		"build": "turbo run build",
 		"dev": "turbo run dev",
 		"lint": "turbo run lint",
