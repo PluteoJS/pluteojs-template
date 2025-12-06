@@ -16,11 +16,10 @@ This Turborepo includes the following packages/apps:
 
 ### Apps and Packages
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+- `@pluteojs/express-api-server`: Express.js API server application
+- `@pluteojs/api-types`: Shared API types and Zod validation schemas
+- `@pluteojs/eslint-config`: ESLint configurations for the monorepo
+- `@pluteojs/typescript-config`: TypeScript configurations used throughout the monorepo
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 

@@ -1,5 +1,5 @@
 /**
- * @repo/api-types
+ * @pluteojs/api-types
  *
  * Shared API types and Zod validation schemas for the PluteoJS monorepo.
  */
