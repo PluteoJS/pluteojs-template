@@ -1,0 +1,10 @@
+{
+	"name": "@pluteojs/tooling-monorepo-utils",
+	"version": "0.0.1",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"enforce-pnpm": "node enforce-pnpm.mjs",
+		"sync-preinstall": "node sync-pnpm-preinstall.mjs"
+	}
+}

@@ -1,0 +1,23 @@
+{
+	"name": "@pluteojs/tooling-release-versioning",
+	"version": "0.0.1",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"build": "tsc",
+		"compute-version": "node dist/commands/computeNextVersion.js",
+		"fix-release-branch": "node dist/commands/fixGitFlowReleaseBranchName.js"
+	},
+	"dependencies": {
+		"conventional-changelog-angular": "^8.0.0",
+		"conventional-recommended-bump": "^10.0.0",
+		"semver": "^7.6.3",
+		"simple-git": "^3.27.0"
+	},
+	"devDependencies": {
+		"@pluteojs/typescript-config": "workspace:*",
+		"@types/node": "^22.0.0",
+		"@types/semver": "^7.5.8",
+		"typescript": "5.9.2"
+	}
+}
