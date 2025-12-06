@@ -16,9 +16,8 @@
 		"check-types": "turbo run check-types"
 	},
 	"lint-staged": {
-		"*.{js,jsx,ts,tsx}": [
-			"prettier --write",
-			"eslint --fix"
+		"*.{js,jsx,ts,tsx,json,md}": [
+			"prettier --write"
 		]
 	},
 	"devDependencies": {

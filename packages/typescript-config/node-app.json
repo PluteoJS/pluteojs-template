@@ -1,0 +1,19 @@
+{
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"extends": "./base.json",
+	"compilerOptions": {
+		"lib": ["ES2022"],
+		"module": "ES2022",
+		"moduleResolution": "Bundler",
+		"outDir": "./build",
+		"rootDir": "./src",
+		"sourceMap": true,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"declaration": false,
+		"declarationMap": false,
+		"noEmit": false,
+		"baseUrl": "./",
+		"forceConsistentCasingInFileNames": true
+	}
+}

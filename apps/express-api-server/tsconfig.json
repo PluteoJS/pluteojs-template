@@ -1,0 +1,23 @@
+{
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"extends": "@repo/typescript-config/node-app.json",
+	"compilerOptions": {
+		"outDir": "./build",
+		"rootDir": "./",
+		"baseUrl": "./",
+		"paths": {
+			"*": ["src/*"],
+			"@api/*": ["src/api/*"],
+			"@config": ["src/config"],
+			"@constants/*": ["src/constants/*"],
+			"@services/*": ["src/services/*"],
+			"@db/*": ["src/db/*"],
+			"@util/*": ["src/util/*"],
+			"@customTypes/*": ["src/customTypes/*"],
+			"@validations/*": ["src/validations/*"],
+			"@loaders/*": ["src/loaders/*"]
+		}
+	},
+	"include": ["src/**/*"],
+	"exclude": ["node_modules", "build"]
+}
