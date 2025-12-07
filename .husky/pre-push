@@ -1,1 +1,1 @@
-pnpm tsc -p ./tsconfig.json --noEmit --skipLibCheck
+pnpm check-types
