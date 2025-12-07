@@ -4,11 +4,10 @@
 	"compilerOptions": {
 		"outDir": "./dist",
 		"rootDir": "./src",
-		"module": "CommonJS",
-		"moduleResolution": "Node",
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
 		"declaration": true,
-		"declarationMap": true,
-		"esModuleInterop": true
+		"declarationMap": true
 	},
 	"include": ["src/**/*"],
 	"exclude": ["node_modules", "dist"]

@@ -166,6 +166,9 @@ importers:
       '@pluteojs/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+      tsup:
+        specifier: ^8.4.0
+        version: 8.5.1(jiti@2.6.1)(postcss@8.4.31)(typescript@5.9.2)(yaml@2.8.2)
       typescript:
         specifier: ^5.9.2
         version: 5.9.2
