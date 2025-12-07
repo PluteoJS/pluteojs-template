@@ -103,6 +103,33 @@ async function sendMarketingTextEmail(
 }
 
 /**
+ * Sends HTML type body email via transactional email service.
+ */
+async function sendTransactionHtmlEmail(
+	from: string,
+	to: string,
+	cc: NullableString,
+	bcc: NullableString,
+	subject: string,
+	textBody: string,
+	htmlBody: string
+): Promise<SMTPTransport.SentMessageInfo> {
+	const mailOptions = buildMailOptions(
+		from,
+		to,
+		cc,
+		bcc,
+		subject,
+		textBody,
+		htmlBody
+	);
+
+	const response = await transactionEmailTransporter.sendMail(mailOptions);
+
+	return response;
+}
+
+/**
  * Parses the message ID by removing < and > symbols from the original value.
  */
 function parseMessageId(messageIdWithSymbols: string): string {
@@ -116,6 +143,7 @@ function parseMessageId(messageIdWithSymbols: string): string {
 
 export default {
 	sendTransactionTextEmail,
+	sendTransactionHtmlEmail,
 	sendMarketingTextEmail,
 	parseMessageId,
 };

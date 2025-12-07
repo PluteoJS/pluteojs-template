@@ -1,3 +1,9 @@
+import {
+	renderEmailVerificationEmail,
+	renderPasswordResetEmail,
+	renderWelcomeEmail,
+} from "@pluteojs/email-templates";
+
 import logger from "@loaders/logger";
 
 import type {DBTaskType} from "@db/repositories";
@@ -21,17 +27,27 @@ export default class EmailService {
 
 		const senderAddress =
 			config.emailService.transactionalEmail.smtpFromAddress;
-		const subject = "Welcome to PLUTEOJS";
-		const body = `Hi ${firstName}\n\nWelcome to PLUTEOJS\n\n\nBest,\nTeam PLUTEOJS\n`;
+		const subject = "Welcome to PluteoJS";
+
+		// Render HTML and plain text versions using react-email templates
+		const htmlBody = await renderWelcomeEmail({
+			firstName,
+			appName: "PluteoJS",
+		});
+		const textBody = await renderWelcomeEmail(
+			{firstName, appName: "PluteoJS"},
+			{plainText: true}
+		);
 
 		logger.silly("Sending welcome email");
-		const messageSendResult = await emailServiceUtil.sendTransactionTextEmail(
+		const messageSendResult = await emailServiceUtil.sendTransactionHtmlEmail(
 			senderAddress,
 			email,
 			null,
 			null,
 			subject,
-			body
+			textBody,
+			htmlBody
 		);
 
 		logger.silly("Message send result", messageSendResult);
@@ -50,8 +66,8 @@ export default class EmailService {
 				senderAddress,
 				email,
 				subject,
-				emailBodyTypes.TEXT,
-				body
+				emailBodyTypes.HTML,
+				htmlBody
 			);
 
 			return true;
@@ -74,16 +90,28 @@ export default class EmailService {
 		const senderAddress =
 			config.emailService.transactionalEmail.smtpFromAddress;
 		const subject = "Reset Password | PluteoJS";
-		const body = `Hi ${firstName}\n\n Got a reset Password request from  ${clientIp}. Your OTP: ${otp}\n`;
+
+		// Render HTML and plain text versions using react-email templates
+		const htmlBody = await renderPasswordResetEmail({
+			firstName,
+			otp,
+			clientIp,
+			expirationMinutes: 10,
+		});
+		const textBody = await renderPasswordResetEmail(
+			{firstName, otp, clientIp, expirationMinutes: 10},
+			{plainText: true}
+		);
 
 		logger.silly("Sending password reset email");
-		const messageSendResult = await emailServiceUtil.sendTransactionTextEmail(
+		const messageSendResult = await emailServiceUtil.sendTransactionHtmlEmail(
 			senderAddress,
 			email,
 			null,
 			null,
 			subject,
-			body
+			textBody,
+			htmlBody
 		);
 
 		logger.silly("Message send result", messageSendResult);
@@ -101,8 +129,8 @@ export default class EmailService {
 				senderAddress,
 				email,
 				subject,
-				emailBodyTypes.TEXT,
-				body
+				emailBodyTypes.HTML,
+				htmlBody
 			);
 			return true;
 		}
@@ -119,17 +147,28 @@ export default class EmailService {
 		dbTask: DBTaskType
 	): Promise<boolean> {
 		const senderAddress = config.emailService.mailgun.senderId;
-		const subject = "Verify Email | PLUTEOJS";
-		const body = `Hi\n\n Got an email verification request from  ${clientIp}.\n\nYour OTP: ${otp}\n`;
+		const subject = "Verify Email | PluteoJS";
+
+		// Render HTML and plain text versions using react-email templates
+		const htmlBody = await renderEmailVerificationEmail({
+			otp,
+			clientIp,
+			expirationMinutes: 10,
+		});
+		const textBody = await renderEmailVerificationEmail(
+			{otp, clientIp, expirationMinutes: 10},
+			{plainText: true}
+		);
 
 		logger.silly("Sending email verification email");
-		const messageSendResult = await emailServiceUtil.sendTransactionTextEmail(
+		const messageSendResult = await emailServiceUtil.sendTransactionHtmlEmail(
 			senderAddress,
 			email,
 			null,
 			null,
 			subject,
-			body
+			textBody,
+			htmlBody
 		);
 
 		logger.silly("Message send result", messageSendResult);
@@ -147,8 +186,8 @@ export default class EmailService {
 				senderAddress,
 				email,
 				subject,
-				emailBodyTypes.TEXT,
-				body
+				emailBodyTypes.HTML,
+				htmlBody
 			);
 			return true;
 		}

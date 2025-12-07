@@ -16,6 +16,7 @@
 	"dependencies": {
 		"@pluteojs/types": "^0.1.2",
 		"@pluteojs/api-types": "workspace:*",
+		"@pluteojs/email-templates": "workspace:*",
 		"argon2": "^0.41.1",
 		"cors": "^2.8.5",
 		"dotenv": "^16.5.0",

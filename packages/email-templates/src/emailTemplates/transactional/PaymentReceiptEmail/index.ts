@@ -1,0 +1,1 @@
+export {PaymentReceiptEmail} from "./PaymentReceiptEmail";

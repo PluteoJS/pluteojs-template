@@ -1,0 +1,1 @@
+export {PromotionalEmail} from "./PromotionalEmail";
