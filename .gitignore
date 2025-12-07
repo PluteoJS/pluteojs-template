@@ -62,3 +62,6 @@ pids
 # Misc
 .DS_Store
 *.pem
+
+# LLM References
+claude-references
