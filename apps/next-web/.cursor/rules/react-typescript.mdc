@@ -1,0 +1,118 @@
+---
+description: React-specific TypeScript patterns and best practices
+globs: *.tsx
+alwaysApply: false
+---
+
+# React + TypeScript Coding Standards
+
+This rule builds on the core TypeScript standards and provides additional guidance for React development.
+
+## Hooks
+
+- Group hooks logically. Separate each `useState`, `useEffect`, `useMemo`, `useCallback`, etc., with a blank line.
+- Avoid mixing multiple concerns inside a single hook.
+- Always clean up effects that use subscriptions, timers, or external resources:
+  ```tsx
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // logic
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+  ```
+
+## Controlled Components
+
+- Always use controlled inputs where possible.
+- Bind input `value` and `onChange` explicitly:
+  ```tsx
+  const [email, setEmail] = useState("");
+
+  return <input value={email} onChange={(e) => setEmail(e.target.value)} />;
+  ```
+
+## Prop Drilling & Component Design
+
+- Avoid excessive prop drilling — prefer composition or context where appropriate.
+- Use wrapper components and shared state management (like Redux Toolkit) when scaling.
+
+## Component Structure
+
+- Keep components small and focused on a single responsibility.
+- Use internal render helpers when returning multiple JSX sections:
+  ```tsx
+  const renderUserInfo = () => {
+    return <div>{user.name}</div>;
+  };
+
+  return <div>{renderUserInfo()}</div>;
+  ```
+
+## Naming Conventions
+
+- Component names should be PascalCase.
+- File and folder names should match the component name.
+
+## Props
+
+- Always define prop types using an interface named `iComponentNameProps`.
+- Default prop values should be handled via destructuring or `defaultProps` (if using class components).
+- Optional props should be marked with `?`.
+
+## Type Safety
+
+- Strongly type event handlers and state:
+  ```tsx
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  };
+  ```
+
+## Readability
+
+- Avoid ternary expressions inside JSX if it makes the code unreadable — extract logic to a variable.
+- Break complex JSX trees into smaller, reusable components.
+
+## State Naming
+
+- Use descriptive state names that reflect their purpose.
+  ```tsx
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  ```
+
+## Example
+
+```tsx
+interface iLoginFormProps {
+  onSubmit: (email: string, password: string) => void;
+}
+
+const LoginForm: FC<iLoginFormProps> = ({ onSubmit }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    onSubmit(email, password);
+  };
+
+  return (
+    <form onSubmit={handleFormSubmit}>
+      <input
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Email"
+      />
+      <input
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        type="password"
+        placeholder="Password"
+      />
+      <button type="submit">Login</button>
+    </form>
+  );
+};
+```

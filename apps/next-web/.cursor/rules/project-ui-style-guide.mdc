@@ -1,0 +1,77 @@
+---
+description: Styling and theming standards for the project UI
+globs: src/**/*.tsx,*.tsx,*.css,*.scss
+alwaysApply: false
+---
+
+# Styling and Theming Standards
+
+This project follows the default styling conventions recommended by ShadCN UI, using Tailwind CSS as the utility-first framework.
+
+## Theme Guidelines
+
+- The base theme uses **black and white** tones with **grey variants** for accents and depth.
+- The visual style must reflect **clean, minimal UIs**:
+  - Flat backgrounds
+  - Soft borders
+  - Neutral color hierarchy
+- Avoid vibrant or saturated colors unless explicitly needed for semantic purpose (e.g., error, success).
+- Use **consistent corner radius** and **balanced spacing** to maintain visual harmony and aesthetic flow.
+
+## Accessibility & WCAG Compliance
+
+- All components must follow the latest **WCAG guidelines**.
+- Maintain sufficient color contrast between text and background.
+- Ensure all interactive elements are keyboard accessible and include appropriate ARIA roles or labels where needed.
+- The UI should be **accessible and visually pleasant** at the same time — clean but inclusive.
+
+## Tailwind Usage
+
+- Use Tailwind utility classes directly in JSX where possible.
+- Avoid writing custom CSS unless necessary (e.g., for complex layout or animation).
+- Use `@apply` only in global or shared style definitions, not inside component JSX.
+- Prefer spacing, sizing, and typography scales from Tailwind's default config.
+
+## ShadCN Defaults
+
+- Follow ShadCN CLI-generated component defaults.
+- Extend ShadCN components via wrapper components or `className` props only.
+- Do not modify original ShadCN UI files directly (`src/components/lib/shadcn/ui/`).
+
+## Color Usage
+
+- Background: `bg-white`, `bg-black`, `bg-gray-50`, `bg-gray-100`, etc.
+- Text: `text-black`, `text-white`, `text-gray-700`, `text-gray-500`
+- Border: `border-gray-200`, `border-gray-300`
+- Interactive: `hover:bg-gray-100`, `focus:outline-none`, `disabled:opacity-50`
+
+## Spacing & Layout
+
+- Use consistent spacing utilities (`p-x`, `m-x`) for alignment.
+- Avoid hardcoded pixel values; use Tailwind spacing scale.
+- Maintain vertical rhythm with margin/padding spacing between sections.
+
+## Typography
+
+- Use Tailwind typography scale for font sizes.
+- Stick to a single readable sans-serif font defined in the theme config.
+- Avoid multiple font families or mixing serif with sans-serif.
+
+## Components
+
+- Use `rounded` utilities to ensure consistent border radius.
+- Use `shadow` utilities minimally for subtle depth.
+- Ensure all components are responsive and mobile-friendly by default.
+
+## Example
+
+```tsx
+return (
+  <div className="bg-white text-gray-800 p-4 rounded border border-gray-200 shadow-sm">
+    <h2 className="text-lg font-semibold">Section Title</h2>
+    <p className="text-sm text-gray-600">This is a clean, minimal UI block.</p>
+  </div>
+);
+```
+
+This style guide ensures that the application maintains a consistent, modern aesthetic that is both visually pleasing and accessible to all users.

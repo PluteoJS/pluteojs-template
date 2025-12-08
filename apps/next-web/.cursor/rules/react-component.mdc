@@ -1,0 +1,67 @@
+---
+description: Standards and patterns for creating React components
+globs: src/components/**
+alwaysApply: false
+---
+
+# React Component Development Guidelines
+
+## Folder & File Structure
+
+- Each component must reside in its own folder named in PascalCase.
+- The main implementation should be in a file matching the folder name (e.g., `ExampleComponent/ExampleComponent.tsx`).
+- Export the component via an `index.ts` file using default export:
+  ```ts
+  import ExampleComponent from "./ExampleComponent";
+  export default ExampleComponent;
+  ```
+
+## Props & Types
+
+- Define the props interface as `iComponentNameProps`.
+- Define and export any supporting complex types/interfaces in the same file.
+- Props should be typed strictly using TypeScript.
+- Use destructuring to access props.
+
+## Styling & Responsiveness
+
+- Components must be responsive by default.
+- Prefer Tailwind CSS utility classes over custom styles.
+- Avoid hardcoded layout values unless necessary.
+
+## Code Structure
+
+- Use PascalCase for component and file names.
+- Ensure code is readable and maintainable.
+- Use internal render functions for modularizing JSX when needed.
+- Avoid nested conditionals.
+- Minimize conditionals using early returns, ternaries, or extracted helpers.
+
+## Documentation
+
+- Add inline comments for sections, explaining the logic and structure.
+- When using useState, useEffect, or variables:
+  - Use self-explanatory variable names.
+  - Add comments describing the state's purpose and usage.
+
+## Example
+
+```tsx
+type iExampleComponentProps = {
+  id?: ComponentIdType;
+  label: string;
+};
+
+const ExampleComponent: FC<iExampleComponentProps> = ({ id, label }) => {
+  return (
+    <div id={id}>
+      <text>Example Component {label}</text>
+    </div>
+  );
+};
+```
+
+## Reusability
+
+- Create wrapper components instead of altering library defaults (e.g., ShadCN).
+- Ensure all public-facing components are composable.
