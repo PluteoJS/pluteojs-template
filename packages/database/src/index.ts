@@ -49,5 +49,5 @@ export {default as config} from "@/config";
 // Constants
 export {serverModes, databaseSslModes} from "@/constants/databaseConstants";
 
-// Utility exports
-export {withTransaction, type DbTransaction} from "@/util";
+// Type exports
+export {type DBTransaction} from "@/types";

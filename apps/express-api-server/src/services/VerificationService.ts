@@ -1,12 +1,12 @@
 import moment from "moment-timezone";
 
 import {
+	db,
 	eq,
 	desc,
 	sql,
 	emailVerificationRequestLogs,
-	withTransaction,
-	type DbTransaction,
+	type DBTransaction,
 } from "@pluteojs/database";
 
 import logger from "@loaders/logger";
@@ -32,7 +32,7 @@ export default class VerificationService {
 		email: string,
 		ipAddress: NullableString
 	): Promise<iGenericServiceResult<null>> {
-		return withTransaction(async (tx) => {
+		return db.transaction(async (tx) => {
 			const sendEmailVerificationOtpEmail = async (
 				id: NullableString = null,
 				otpToSend: NullableString = null
@@ -179,10 +179,10 @@ export default class VerificationService {
 		uniqueRequestId: NullableString,
 		email: string,
 		otp: string,
-		dbTransaction: DbTransaction | null = null
+		dbTransaction: DBTransaction | null = null
 	): Promise<iGenericServiceResult<null>> {
 		const handleEmailVerification = async (
-			transaction: DbTransaction
+			transaction: DBTransaction
 		): Promise<iGenericServiceResult<null>> => {
 			const lastEmailVerificationRequestRecords = await transaction
 				.select()
@@ -285,6 +285,6 @@ export default class VerificationService {
 			return handleEmailVerification(dbTransaction);
 		}
 
-		return withTransaction(handleEmailVerification);
+		return db.transaction(handleEmailVerification);
 	}
 }

@@ -7,7 +7,6 @@ import {
 	desc,
 	users,
 	resetPasswordLogs,
-	withTransaction,
 } from "@pluteojs/database";
 
 import resetPasswordUtil from "@util/resetPasswordUtil";
@@ -45,7 +44,7 @@ export default class AuthService {
 	> {
 		const {firstName, lastName, email, password} = userInputDTO;
 
-		return withTransaction(async (tx) => {
+		return db.transaction(async (tx) => {
 			const currentUserRecords = await tx
 				.select()
 				.from(users)
@@ -235,7 +234,7 @@ export default class AuthService {
 		email: string,
 		ipAddress: NullableString
 	): Promise<iGenericServiceResult<null>> {
-		return withTransaction(async (tx) => {
+		return db.transaction(async (tx) => {
 			logger.silly("Retrieving the userRecord by email id");
 			const userRecords = await tx
 				.select()
@@ -349,7 +348,7 @@ export default class AuthService {
 		otp: string,
 		newPassword: string
 	): Promise<iGenericServiceResult<NullableServiceSuccess>> {
-		return withTransaction(async (transaction) => {
+		return db.transaction(async (transaction) => {
 			logger.debug(
 				uniqueRequestId,
 				"Retrieving the userRecord by email id",

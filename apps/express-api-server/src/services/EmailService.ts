@@ -4,7 +4,7 @@ import {
 	renderWelcomeEmail,
 } from "@pluteojs/email-templates";
 
-import {emailLogs, type DbTransaction} from "@pluteojs/database";
+import {emailLogs, type DBTransaction} from "@pluteojs/database";
 
 import logger from "@loaders/logger";
 import config from "@config";
@@ -21,7 +21,7 @@ export default class EmailService {
 	 */
 	public async sendWelcomeEmail(
 		userDetails: iUser,
-		dbTx: DbTransaction
+		dbTx: DBTransaction
 	): Promise<boolean> {
 		const {id: userId, firstName, email} = userDetails;
 
@@ -83,7 +83,7 @@ export default class EmailService {
 		clientIp: NullableString,
 		otp: string,
 		userDetails: iUser,
-		dbTx: DbTransaction
+		dbTx: DBTransaction
 	): Promise<boolean> {
 		const {id: userId, firstName, email} = userDetails;
 
@@ -144,7 +144,7 @@ export default class EmailService {
 		clientIp: NullableString,
 		otp: string,
 		email: string,
-		dbTx: DbTransaction
+		dbTx: DBTransaction
 	): Promise<boolean> {
 		const senderAddress = config.emailService.mailgun.senderId;
 		const subject = "Verify Email | PluteoJS";
