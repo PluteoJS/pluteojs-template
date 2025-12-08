@@ -1,12 +1,17 @@
 import {defineConfig} from "drizzle-kit";
 
-import config from "./src/config";
+import config from "@/config/index.js";
 
+/**
+ * Drizzle Kit configuration for database migrations and schema management.
+ */
 export default defineConfig({
+	dialect: "postgresql",
 	schema: "./src/schema/index.ts",
 	out: "./drizzle",
-	dialect: "postgresql",
 	dbCredentials: {
 		url: config.database.url,
 	},
+	strict: true,
+	verbose: true,
 });

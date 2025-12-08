@@ -38,16 +38,16 @@ export {
 } from "drizzle-orm";
 
 // Database client
-export {db, pool, type Database} from "./client";
+export {db, pool, type Database} from "@/client";
 
 // Schema exports
-export * from "./schema";
+export * from "@/schema";
 
 // Config (default export - use `import config from "@pluteojs/database/config"` if needed)
-export {default as config} from "./config";
+export {default as config} from "@/config";
 
 // Constants
-export {databaseConstants} from "./constants/databaseConstants";
+export {serverModes, databaseSslModes} from "@/constants/databaseConstants";
 
 // Utility exports
-export {withTransaction, type DbTransaction} from "./util";
+export {withTransaction, type DbTransaction} from "@/util";

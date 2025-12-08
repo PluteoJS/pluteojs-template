@@ -3,12 +3,15 @@
 	"extends": "@pluteojs/typescript-config/base.json",
 	"compilerOptions": {
 		"outDir": "./dist",
-		"rootDir": "./src",
 		"module": "ESNext",
 		"moduleResolution": "Bundler",
 		"declaration": true,
-		"declarationMap": true
+		"declarationMap": true,
+		"baseUrl": "./src",
+		"paths": {
+			"@/*": ["*", "*.ts", "*/index.ts"]
+		}
 	},
-	"include": ["src/**/*"],
+	"include": ["src", "drizzle.config.ts"],
 	"exclude": ["node_modules", "dist", "drizzle"]
 }

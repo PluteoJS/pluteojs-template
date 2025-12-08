@@ -1,15 +1,22 @@
 /**
- * Database-related constants.
+ * Runtime environment modes for the application.
+ * Used to determine configuration loading and behavior.
  */
-export const databaseConstants = {
-	/** Default connection pool size */
-	DEFAULT_POOL_SIZE: 10,
+export enum serverModes {
+	DEVELOPMENT_LOCAL = "development.local",
+	DEVELOPMENT = "development",
+	TEST = "test",
+	STAGING = "staging",
+	PRODUCTION = "production",
+}
 
-	/** Table names for reference */
-	tables: {
-		USERS: "users",
-		EMAIL_LOGS: "email_logs",
-		EMAIL_VERIFICATION_REQUEST_LOGS: "email_verification_request_logs",
-		RESET_PASSWORD_LOGS: "reset_password_logs",
-	},
-} as const;
+/**
+ * PostgreSQL SSL connection modes.
+ * @see https://www.postgresql.org/docs/current/libpq-ssl.html#LIBPQ-SSL-SSLMODE-STATEMENTS
+ */
+export enum databaseSslModes {
+	DISABLE = "disable",
+	REQUIRE = "require",
+	VERIFY_CA = "verify-ca",
+	VERIFY_FULL = "verify-full",
+}

@@ -1,4 +1,4 @@
-import {db} from "../client";
+import {db} from "@/client";
 
 /**
  * Database transaction type - can be used to type transaction parameters in functions

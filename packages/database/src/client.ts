@@ -1,8 +1,8 @@
 import {drizzle} from "drizzle-orm/node-postgres";
 import {Pool} from "pg";
 
-import config from "./config";
-import * as schema from "./schema";
+import config from "@/config";
+import * as schema from "@/schema";
 
 // Create connection pool
 const pool = new Pool({
