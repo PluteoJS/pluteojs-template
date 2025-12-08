@@ -27,7 +27,16 @@ export default function Home() {
 							PluteoJS Template
 						</h1>
 						<p className="text-sm text-muted-foreground">
-							by{" "}
+							Created by{" "}
+							<a
+								href="https://swalahamani.com"
+								target="_blank"
+								rel="noopener noreferrer"
+								className="hover:underline font-medium"
+							>
+								Muhammad Swalah
+							</a>{" "}
+							at{" "}
 							<a
 								href="https://heedlabs.com"
 								target="_blank"
@@ -74,7 +83,7 @@ export default function Home() {
 						</CardHeader>
 						<CardContent>
 							<p>
-								Next.js 15, React 19, Redux Toolkit, Express API, Drizzle ORM,
+								Next.js 16, React 19, Redux Toolkit, Express API, Drizzle ORM,
 								and shadcn/ui components.
 							</p>
 						</CardContent>
@@ -382,10 +391,17 @@ export default function Home() {
 							</a>
 						</div>
 					</div>
-					<div className="flex items-center gap-2 pt-4 border-t w-full justify-center">
-						<span className="text-sm text-muted-foreground">
-							Developed and maintained by
-						</span>
+					<div className="flex items-center gap-2 pt-4 border-t w-full justify-center flex-wrap">
+						<span className="text-sm text-muted-foreground">Created by</span>
+						<a
+							href="https://swalahamani.com"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="text-sm font-medium hover:underline"
+						>
+							Muhammad Swalah
+						</a>
+						<span className="text-sm text-muted-foreground">at</span>
 						<a
 							href="https://heedlabs.com"
 							target="_blank"

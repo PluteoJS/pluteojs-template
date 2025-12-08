@@ -1,134 +1,141 @@
-# Turborepo starter
+# PluteoJS
 
-This Turborepo starter is maintained by the Turborepo core team.
+A full-stack TypeScript monorepo template for building scalable applications with Next.js, Express, and shared packages.
 
-## Using this example
+Created by [Muhammad Swalah](https://swalahamani.com) at [HeedLabs](https://heedlabs.com).
 
-Run the following command:
+## What's Inside?
 
-```sh
-npx create-turbo@latest
+This Turborepo monorepo includes the following apps and packages:
+
+### Apps
+
+| App                            | Description                                                     | Port |
+| ------------------------------ | --------------------------------------------------------------- | ---- |
+| `@pluteojs/next-web`           | Next.js 16 frontend with React 19, Redux Toolkit, and shadcn/ui | 4000 |
+| `@pluteojs/express-api-server` | Express.js REST API server with TypeScript                      | 3000 |
+
+### Packages
+
+| Package                       | Description                                        |
+| ----------------------------- | -------------------------------------------------- |
+| `@pluteojs/api-types`         | Shared Zod validation schemas and TypeScript types |
+| `@pluteojs/database`          | Drizzle ORM setup with PostgreSQL                  |
+| `@pluteojs/email-templates`   | React Email templates                              |
+| `@pluteojs/eslint-config`     | Shared ESLint configurations                       |
+| `@pluteojs/typescript-config` | Shared TypeScript configurations                   |
+
+## Tech Stack
+
+- **Runtime**: Node.js 20+
+- **Package Manager**: pnpm
+- **Build System**: Turborepo
+- **Frontend**: Next.js 16, React 19, Tailwind CSS 4, shadcn/ui
+- **Backend**: Express.js, Drizzle ORM
+- **Database**: PostgreSQL
+- **Validation**: Zod
+- **State Management**: Redux Toolkit
+- **Type Safety**: TypeScript 5.9+
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 20.9 or higher
+- pnpm 9+
+- PostgreSQL (for database package)
+
+### Installation
+
+```bash
+# Clone the repository
+git clone <repository-url>
+cd pluteojs-template
+
+# Install dependencies
+pnpm install
 ```
 
-## What's inside?
+### Development
 
-This Turborepo includes the following packages/apps:
+```bash
+# Run all apps in development mode
+pnpm dev
 
-### Apps and Packages
-
-- `@pluteojs/express-api-server`: Express.js API server application
-- `@pluteojs/api-types`: Shared API types and Zod validation schemas
-- `@pluteojs/eslint-config`: ESLint configurations for the monorepo
-- `@pluteojs/typescript-config`: TypeScript configurations used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+# Run a specific app
+pnpm --filter @pluteojs/next-web dev
+pnpm --filter @pluteojs/express-api-server dev
+```
 
 ### Build
 
-To build all apps and packages, run the following command:
+```bash
+# Build all apps and packages
+pnpm build
 
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+# Build a specific app/package
+pnpm --filter @pluteojs/next-web build
+pnpm --filter @pluteojs/express-api-server build
 ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+### Code Quality
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+```bash
+# Run linting across all packages
+pnpm lint
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+# Run type checking across all packages
+pnpm check-types
 
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+# Format code with Prettier
+pnpm format
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+## Project Structure
 
 ```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
+pluteojs-template/
+├── apps/
+│   ├── next-web/              # Next.js frontend application
+│   └── express-api-server/    # Express.js API server
+├── packages/
+│   ├── api-types/             # Shared Zod schemas & types
+│   ├── database/              # Drizzle ORM configuration
+│   ├── email-templates/       # React Email templates
+│   ├── eslint-config/         # Shared ESLint config
+│   └── typescript-config/     # Shared TypeScript config
+├── tooling/                   # Monorepo utilities
+├── turbo.json                 # Turborepo configuration
+└── pnpm-workspace.yaml        # pnpm workspace configuration
 ```
 
-### Remote Caching
+## Key Features
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+- **Monorepo Architecture**: Organized codebase with shared packages and optimized builds
+- **Full-Stack TypeScript**: End-to-end type safety with shared types between frontend and backend
+- **Modern Tooling**: Latest versions of Next.js, React, and development tools
+- **Code Quality**: Pre-configured ESLint, Prettier, and TypeScript strict mode
+- **Database Ready**: Drizzle ORM with PostgreSQL support
+- **Email Templates**: React Email for transactional emails
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+## Useful Commands
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+| Command            | Description                        |
+| ------------------ | ---------------------------------- |
+| `pnpm dev`         | Start all apps in development mode |
+| `pnpm build`       | Build all apps and packages        |
+| `pnpm lint`        | Run ESLint across all packages     |
+| `pnpm check-types` | Run TypeScript type checking       |
+| `pnpm format`      | Format code with Prettier          |
+| `pnpm clean`       | Clean build artifacts              |
 
-```
-cd my-turborepo
+## Learn More
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
+- [Turborepo Documentation](https://turborepo.com/docs)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Drizzle ORM Documentation](https://orm.drizzle.team)
+- [shadcn/ui Documentation](https://ui.shadcn.com)
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
+## License
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+MIT
