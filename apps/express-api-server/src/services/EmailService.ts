@@ -4,9 +4,9 @@ import {
 	renderWelcomeEmail,
 } from "@pluteojs/email-templates";
 
-import logger from "@loaders/logger";
+import {emailLogs, type DbTransaction} from "@pluteojs/database";
 
-import type {DBTaskType} from "@db/repositories";
+import logger from "@loaders/logger";
 import config from "@config";
 import {emailBodyTypes} from "@constants/emailServiceConstants";
 import emailServiceUtil from "@util/emailServiceUtil";
@@ -21,7 +21,7 @@ export default class EmailService {
 	 */
 	public async sendWelcomeEmail(
 		userDetails: iUser,
-		dbTask: DBTaskType
+		dbTx: DbTransaction
 	): Promise<boolean> {
 		const {id: userId, firstName, email} = userDetails;
 
@@ -59,16 +59,16 @@ export default class EmailService {
 			const uuid = securityUtil.generateUUID();
 
 			logger.silly("Creating email log record");
-			await dbTask.emailLogs.add(
-				uuid,
+			await dbTx.insert(emailLogs).values({
+				id: uuid,
 				userId,
 				messageId,
 				senderAddress,
-				email,
+				targetAddress: email,
 				subject,
-				emailBodyTypes.HTML,
-				htmlBody
-			);
+				bodyType: emailBodyTypes.HTML,
+				body: htmlBody,
+			});
 
 			return true;
 		}
@@ -83,7 +83,7 @@ export default class EmailService {
 		clientIp: NullableString,
 		otp: string,
 		userDetails: iUser,
-		dbTask: DBTaskType
+		dbTx: DbTransaction
 	): Promise<boolean> {
 		const {id: userId, firstName, email} = userDetails;
 
@@ -122,16 +122,16 @@ export default class EmailService {
 
 			const uuid = securityUtil.generateUUID();
 			logger.silly("Creating email log record");
-			await dbTask.emailLogs.add(
-				uuid,
+			await dbTx.insert(emailLogs).values({
+				id: uuid,
 				userId,
 				messageId,
 				senderAddress,
-				email,
+				targetAddress: email,
 				subject,
-				emailBodyTypes.HTML,
-				htmlBody
-			);
+				bodyType: emailBodyTypes.HTML,
+				body: htmlBody,
+			});
 			return true;
 		}
 		return false;
@@ -144,7 +144,7 @@ export default class EmailService {
 		clientIp: NullableString,
 		otp: string,
 		email: string,
-		dbTask: DBTaskType
+		dbTx: DbTransaction
 	): Promise<boolean> {
 		const senderAddress = config.emailService.mailgun.senderId;
 		const subject = "Verify Email | PluteoJS";
@@ -179,16 +179,16 @@ export default class EmailService {
 
 			const uuid = securityUtil.generateUUID();
 			logger.silly("Creating email log record");
-			await dbTask.emailLogs.add(
-				uuid,
-				null,
+			await dbTx.insert(emailLogs).values({
+				id: uuid,
+				userId: null,
 				messageId,
 				senderAddress,
-				email,
+				targetAddress: email,
 				subject,
-				emailBodyTypes.HTML,
-				htmlBody
-			);
+				bodyType: emailBodyTypes.HTML,
+				body: htmlBody,
+			});
 			return true;
 		}
 

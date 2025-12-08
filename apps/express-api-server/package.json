@@ -6,8 +6,7 @@
 	"main": "./src/App.ts",
 	"scripts": {
 		"dev": "nodemon",
-		"build": "rimraf ./build && tsc --project tsconfig.json && tsc-alias -p tsconfig.json && pnpm copy-to-build:sql",
-		"copy-to-build:sql": "copyfiles -u 1 \"./src/**/*.sql\" \"build/src\"",
+		"build": "rimraf ./build && tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
 		"start": "node ./build/src/App.js",
 		"check-types": "tsc --noEmit",
 		"lint": "eslint .",
@@ -16,6 +15,7 @@
 	"dependencies": {
 		"@pluteojs/types": "^0.1.2",
 		"@pluteojs/api-types": "workspace:*",
+		"@pluteojs/database": "workspace:*",
 		"@pluteojs/email-templates": "workspace:*",
 		"argon2": "^0.41.1",
 		"cors": "^2.8.5",
@@ -31,8 +31,6 @@
 		"ms": "^2.1.3",
 		"nanoid": "^5.1.5",
 		"nodemailer": "^6.10.1",
-		"pg-monitor": "^3.0.0",
-		"pg-promise": "^11.13.0",
 		"qs": "^6.14.0",
 		"winston": "^3.17.0",
 		"winston-slack-webhook-transport": "^2.3.6",

@@ -1,9 +1,17 @@
 import argon2 from "argon2";
 import moment from "moment-timezone";
 
+import {
+	db,
+	eq,
+	desc,
+	users,
+	resetPasswordLogs,
+	withTransaction,
+} from "@pluteojs/database";
+
 import resetPasswordUtil from "@util/resetPasswordUtil";
 import logger from "@loaders/logger";
-import {db} from "@db/index";
 import config from "@config";
 import securityUtil from "@util/securityUtil";
 import serviceUtil from "@util/serviceUtil";
@@ -37,9 +45,14 @@ export default class AuthService {
 	> {
 		const {firstName, lastName, email, password} = userInputDTO;
 
-		return db.task("user-signup", async (task) => {
-			const currentUserRecord = await task.users.findByEmail(email);
-			if (currentUserRecord) {
+		return withTransaction(async (tx) => {
+			const currentUserRecords = await tx
+				.select()
+				.from(users)
+				.where(eq(users.email, email))
+				.limit(1);
+
+			if (currentUserRecords[0]) {
 				logger.silly("Abort sign up: user already exits");
 				return serviceUtil.buildResult(
 					false,
@@ -56,37 +69,41 @@ export default class AuthService {
 			const hashedPassword = await argon2.hash(password);
 
 			logger.silly("Creating user db record");
-			const userRecord = await task.users.add(
-				userId,
-				firstName,
-				lastName,
-				email,
-				null,
-				hashedPassword
-			);
+			const [userRecord] = await tx
+				.insert(users)
+				.values({
+					id: userId,
+					firstName,
+					lastName,
+					email,
+					phoneNumber: null,
+					password: hashedPassword,
+					createdAt: new Date(),
+				})
+				.returning();
 
 			logger.silly("Constructing user object for response from the userRecord");
 			const user: iUser = {
-				id: userRecord.id,
-				firstName: userRecord.first_name,
-				lastName: userRecord.last_name,
-				email: userRecord.email,
-				createdAt: userRecord.created_at,
+				id: userRecord!.id,
+				firstName: userRecord!.firstName,
+				lastName: userRecord!.lastName,
+				email: userRecord!.email,
+				createdAt: userRecord!.createdAt?.toISOString() ?? "",
 			};
 
 			logger.silly("Generating accessToken & refreshToken pair for the user");
 			const {accessToken, refreshToken} = securityUtil.generateJWTPair(
 				{
-					uid: userRecord.id,
+					uid: userRecord!.id,
 				},
 				{
-					uid: userRecord.id,
+					uid: userRecord!.id,
 				}
 			);
 
 			logger.silly("Attempting to send welcome email");
 			try {
-				await this.emailService.sendWelcomeEmail(user, task);
+				await this.emailService.sendWelcomeEmail(user, tx);
 			} catch (error) {
 				logger.warning(
 					uniqueRequestId,
@@ -116,51 +133,59 @@ export default class AuthService {
 		email: string,
 		password: string
 	): Promise<iGenericServiceResult<iTokenPair | null>> {
-		return db.task("user-sign-in", async (task) => {
-			logger.silly("Retrieving the userRecord by email id");
-			const userRecord = await task.users.findByEmail(email);
-			if (userRecord) {
-				const {id, password: passwordHash} = userRecord;
+		logger.silly("Retrieving the userRecord by email id");
+		const userRecords = await db
+			.select()
+			.from(users)
+			.where(eq(users.email, email))
+			.limit(1);
 
-				logger.silly("Checking whether the password is correct or not");
-				const isPasswordMatches = await argon2.verify(passwordHash, password);
+		const userRecord = userRecords[0];
 
-				if (isPasswordMatches) {
-					const tokenPair = securityUtil.generateJWTPair(
-						{
-							uid: id,
-						},
-						{
-							uid: id,
-						}
-					);
+		if (userRecord) {
+			const {id, password: passwordHash} = userRecord;
 
-					return serviceUtil.buildResult(
-						true,
-						httpStatusCodes.SUCCESS_OK,
-						uniqueRequestId,
-						null,
-						tokenPair
-					);
-				}
+			logger.silly("Checking whether the password is correct or not");
+			const isPasswordMatches = await argon2.verify(
+				passwordHash ?? "",
+				password
+			);
 
-				logger.silly("Abort sign in: incorrect password");
+			if (isPasswordMatches) {
+				const tokenPair = securityUtil.generateJWTPair(
+					{
+						uid: id,
+					},
+					{
+						uid: id,
+					}
+				);
+
 				return serviceUtil.buildResult(
-					false,
-					httpStatusCodes.CLIENT_ERROR_BAD_REQUEST,
+					true,
+					httpStatusCodes.SUCCESS_OK,
 					uniqueRequestId,
-					authServiceErrors.signIn.IncorrectUserCredential
+					null,
+					tokenPair
 				);
 			}
 
-			logger.silly("Abort sign in: user doesn't exits");
+			logger.silly("Abort sign in: incorrect password");
 			return serviceUtil.buildResult(
 				false,
 				httpStatusCodes.CLIENT_ERROR_BAD_REQUEST,
 				uniqueRequestId,
 				authServiceErrors.signIn.IncorrectUserCredential
 			);
-		});
+		}
+
+		logger.silly("Abort sign in: user doesn't exits");
+		return serviceUtil.buildResult(
+			false,
+			httpStatusCodes.CLIENT_ERROR_BAD_REQUEST,
+			uniqueRequestId,
+			authServiceErrors.signIn.IncorrectUserCredential
+		);
 	}
 
 	public async renewAccessToken(
@@ -210,18 +235,24 @@ export default class AuthService {
 		email: string,
 		ipAddress: NullableString
 	): Promise<iGenericServiceResult<null>> {
-		return db.task("password-reset-request", async (task) => {
+		return withTransaction(async (tx) => {
 			logger.silly("Retrieving the userRecord by email id");
-			const userRecord = await task.users.findByEmail(email);
+			const userRecords = await tx
+				.select()
+				.from(users)
+				.where(eq(users.email, email))
+				.limit(1);
+
+			const userRecord = userRecords[0];
 
 			if (userRecord) {
 				const sendOtpEmail = async (): Promise<iGenericServiceResult<null>> => {
 					const user: iUser = {
 						id: userRecord.id,
-						firstName: userRecord.first_name,
-						lastName: userRecord.last_name,
+						firstName: userRecord.firstName,
+						lastName: userRecord.lastName,
 						email: userRecord.email,
-						createdAt: userRecord.created_at,
+						createdAt: userRecord.createdAt?.toISOString() ?? "",
 					};
 
 					const otp = await resetPasswordUtil.generateOTP(
@@ -233,7 +264,7 @@ export default class AuthService {
 						ipAddress,
 						otp,
 						user,
-						task
+						tx
 					);
 					logger.silly("Reset Password email Done ");
 
@@ -241,14 +272,16 @@ export default class AuthService {
 
 					logger.silly("Creating Reset Password Record in DB");
 					const hashedOtp = await argon2.hash(otp);
-					await task.resetPasswordLogs.add(
-						uuid,
-						user.id,
+					await tx.insert(resetPasswordLogs).values({
+						id: uuid,
+						userId: user.id,
 						email,
-						ipAddress,
-						hashedOtp,
-						true
-					);
+						datetime: new Date(),
+						reqIpAddress: ipAddress,
+						otp: hashedOtp,
+						isOtpUsable: true,
+						createdAt: new Date(),
+					});
 
 					return serviceUtil.buildResult(
 						true,
@@ -259,17 +292,20 @@ export default class AuthService {
 					);
 				};
 
-				const lastUserRecord = await task.resetPasswordLogs.selectLatestReq(
-					userRecord.id
-				);
+				const lastUserRecords = await tx
+					.select()
+					.from(resetPasswordLogs)
+					.where(eq(resetPasswordLogs.userId, userRecord.id))
+					.orderBy(desc(resetPasswordLogs.createdAt))
+					.limit(1);
+
+				const lastUserRecord = lastUserRecords[0];
 
 				if (lastUserRecord) {
 					logger.silly("Found a record of reset password for user");
 
 					const currentTime = moment();
-					const lastPasswordResetTimeStampInDB = moment(
-						lastUserRecord.datetime
-					);
+					const lastPasswordResetTimeStampInDB = moment(lastUserRecord.datetime);
 
 					const lastRequestTimeDiff = currentTime.diff(
 						lastPasswordResetTimeStampInDB,
@@ -313,7 +349,7 @@ export default class AuthService {
 		otp: string,
 		newPassword: string
 	): Promise<iGenericServiceResult<NullableServiceSuccess>> {
-		return db.tx("password-reset", async (transaction) => {
+		return withTransaction(async (transaction) => {
 			logger.debug(
 				uniqueRequestId,
 				"Retrieving the userRecord by email id",
@@ -323,11 +359,24 @@ export default class AuthService {
 				}
 			);
 
-			const userRecord = await transaction.users.findByEmail(email);
+			const userRecords = await transaction
+				.select()
+				.from(users)
+				.where(eq(users.email, email))
+				.limit(1);
+
+			const userRecord = userRecords[0];
 
 			if (userRecord) {
-				const lastPasswordResetLogRecord =
-					await transaction.resetPasswordLogs.selectLatestReq(userRecord.id);
+				const lastPasswordResetLogRecords = await transaction
+					.select()
+					.from(resetPasswordLogs)
+					.where(eq(resetPasswordLogs.userId, userRecord.id))
+					.orderBy(desc(resetPasswordLogs.createdAt))
+					.limit(1);
+
+				const lastPasswordResetLogRecord = lastPasswordResetLogRecords[0];
+
 				if (lastPasswordResetLogRecord) {
 					logger.debug(
 						uniqueRequestId,
@@ -338,7 +387,7 @@ export default class AuthService {
 						}
 					);
 
-					if (lastPasswordResetLogRecord.is_otp_usable) {
+					if (lastPasswordResetLogRecord.isOtpUsable) {
 						const otpCreatedTimeFromDbInMoment = moment(
 							lastPasswordResetLogRecord.datetime
 						);
@@ -365,16 +414,17 @@ export default class AuthService {
 
 								const hashedNewPassword = await argon2.hash(newPassword);
 
-								await transaction.users.updatePassword(
-									hashedNewPassword,
-									userRecord.id
-								);
+								await transaction
+									.update(users)
+									.set({password: hashedNewPassword})
+									.where(eq(users.id, userRecord.id));
 
 								logger.silly("Password reset Successfully");
 
-								await transaction.resetPasswordLogs.invalidateOtp(
-									userRecord.id
-								);
+								await transaction
+									.update(resetPasswordLogs)
+									.set({isOtpUsable: false})
+									.where(eq(resetPasswordLogs.userId, userRecord.id));
 
 								logger.silly("OTP invalidated ");
 

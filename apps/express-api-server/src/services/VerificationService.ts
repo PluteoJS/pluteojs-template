@@ -1,8 +1,15 @@
 import moment from "moment-timezone";
 
+import {
+	eq,
+	desc,
+	sql,
+	emailVerificationRequestLogs,
+	withTransaction,
+	type DbTransaction,
+} from "@pluteojs/database";
+
 import logger from "@loaders/logger";
-import {db} from "@db/index";
-import type {DBTaskType} from "@db/repositories";
 import config from "@config";
 import serviceUtil from "@util/serviceUtil";
 import verificationUtil from "@util/verificationUtil";
@@ -25,7 +32,7 @@ export default class VerificationService {
 		email: string,
 		ipAddress: NullableString
 	): Promise<iGenericServiceResult<null>> {
-		return db.task("event-email-verification-request", async (task) => {
+		return withTransaction(async (tx) => {
 			const sendEmailVerificationOtpEmail = async (
 				id: NullableString = null,
 				otpToSend: NullableString = null
@@ -44,7 +51,7 @@ export default class VerificationService {
 					ipAddress,
 					otp,
 					email,
-					task
+					tx
 				);
 				logger.silly("Email sent successfully");
 
@@ -52,18 +59,25 @@ export default class VerificationService {
 					logger.silly(
 						"Updating email verification request log record's updated_at in DB"
 					);
-					await task.emailVerificationRequestLogs.updateRequestDateTime(id);
+					await tx
+						.update(emailVerificationRequestLogs)
+						.set({
+							reqDateTime: sql`CURRENT_TIMESTAMP`,
+							updatedAt: sql`CURRENT_TIMESTAMP`,
+						})
+						.where(eq(emailVerificationRequestLogs.id, id));
 				} else {
 					const uuid = securityUtil.generateUUID();
 
 					logger.silly("Creating email verification request log record in DB");
-					await task.emailVerificationRequestLogs.add(
-						uuid,
+					await tx.insert(emailVerificationRequestLogs).values({
+						id: uuid,
 						email,
-						ipAddress,
+						reqDateTime: new Date(),
+						reqIpAddress: ipAddress,
 						otp,
-						true
-					);
+						isOtpUsable: true,
+					});
 				}
 
 				return serviceUtil.buildResult(
@@ -74,18 +88,24 @@ export default class VerificationService {
 				);
 			};
 
+			const lastEmailVerificationRequestRecords = await tx
+				.select()
+				.from(emailVerificationRequestLogs)
+				.where(eq(emailVerificationRequestLogs.email, email))
+				.orderBy(desc(emailVerificationRequestLogs.reqDateTime))
+				.limit(1);
+
 			const lastEmailVerificationRequestRecord =
-				await task.emailVerificationRequestLogs.selectLatestRequestByUserEmail(
-					email
-				);
+				lastEmailVerificationRequestRecords[0];
+
 			if (lastEmailVerificationRequestRecord) {
 				logger.silly("Found a previous email verification request record");
 				const {
 					id: lastEmailVerificationRequestRecordId,
-					req_date_time: reqDateTime,
-					created_at: creationDateTime,
+					reqDateTime,
+					createdAt: creationDateTime,
 					otp: lastSentOtp,
-					is_otp_usable: isOtpUsable,
+					isOtpUsable,
 				} = lastEmailVerificationRequestRecord;
 
 				if (isOtpUsable) {
@@ -111,9 +131,18 @@ export default class VerificationService {
 							config.verificationConfig.emailVerificationOtpValidity
 						) {
 							logger.silly("Invalidating the last OTP");
-							await task.emailVerificationRequestLogs.invalidateOtp(
-								lastEmailVerificationRequestRecordId
-							);
+							await tx
+								.update(emailVerificationRequestLogs)
+								.set({
+									isOtpUsable: false,
+									updatedAt: sql`CURRENT_TIMESTAMP`,
+								})
+								.where(
+									eq(
+										emailVerificationRequestLogs.id,
+										lastEmailVerificationRequestRecordId
+									)
+								);
 
 							logger.silly("Re-Sending a new OTP");
 							return sendEmailVerificationOtpEmail();
@@ -150,22 +179,27 @@ export default class VerificationService {
 		uniqueRequestId: NullableString,
 		email: string,
 		otp: string,
-		dbTransaction: DBTaskType | null = null
+		dbTransaction: DbTransaction | null = null
 	): Promise<iGenericServiceResult<null>> {
 		const handleEmailVerification = async (
-			transaction: DBTaskType
+			transaction: DbTransaction
 		): Promise<iGenericServiceResult<null>> => {
+			const lastEmailVerificationRequestRecords = await transaction
+				.select()
+				.from(emailVerificationRequestLogs)
+				.where(eq(emailVerificationRequestLogs.email, email))
+				.orderBy(desc(emailVerificationRequestLogs.reqDateTime))
+				.limit(1);
+
 			const lastEmailVerificationRequestRecord =
-				await transaction.emailVerificationRequestLogs.selectLatestRequestByUserEmail(
-					email
-				);
+				lastEmailVerificationRequestRecords[0];
 
 			if (lastEmailVerificationRequestRecord) {
 				const {
 					id: lastEmailVerificationRequestRecordId,
-					req_date_time: reqDateTime,
+					reqDateTime,
 					otp: lastSentOtp,
-					is_otp_usable: isLastSentOtpUsable,
+					isOtpUsable: isLastSentOtpUsable,
 				} = lastEmailVerificationRequestRecord;
 
 				if (isLastSentOtpUsable) {
@@ -181,9 +215,18 @@ export default class VerificationService {
 						lastRequestTimeDiff >
 						config.verificationConfig.emailVerificationOtpValidity
 					) {
-						await transaction.emailVerificationRequestLogs.invalidateOtp(
-							lastEmailVerificationRequestRecordId
-						);
+						await transaction
+							.update(emailVerificationRequestLogs)
+							.set({
+								isOtpUsable: false,
+								updatedAt: sql`CURRENT_TIMESTAMP`,
+							})
+							.where(
+								eq(
+									emailVerificationRequestLogs.id,
+									lastEmailVerificationRequestRecordId
+								)
+							);
 
 						return serviceUtil.buildResult(
 							false,
@@ -194,9 +237,18 @@ export default class VerificationService {
 					}
 
 					if (lastSentOtp === otp) {
-						await transaction.emailVerificationRequestLogs.invalidateOtp(
-							lastEmailVerificationRequestRecordId
-						);
+						await transaction
+							.update(emailVerificationRequestLogs)
+							.set({
+								isOtpUsable: false,
+								updatedAt: sql`CURRENT_TIMESTAMP`,
+							})
+							.where(
+								eq(
+									emailVerificationRequestLogs.id,
+									lastEmailVerificationRequestRecordId
+								)
+							);
 
 						return serviceUtil.buildResult(
 							true,
@@ -233,6 +285,6 @@ export default class VerificationService {
 			return handleEmailVerification(dbTransaction);
 		}
 
-		return db.tx("event-email-verification-request", handleEmailVerification);
+		return withTransaction(handleEmailVerification);
 	}
 }
