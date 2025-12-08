@@ -43,13 +43,8 @@ export {db, pool, type Database} from "./client";
 // Schema exports
 export * from "./schema";
 
-// Config exports
-export {
-	parseDbConfig,
-	getConnectionString,
-	databaseEnvSchema,
-	type DatabaseEnv,
-} from "./config";
+// Config (default export - use `import config from "@pluteojs/database/config"` if needed)
+export {default as config} from "./config";
 
 // Constants
 export {databaseConstants} from "./constants/databaseConstants";

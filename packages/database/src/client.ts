@@ -1,16 +1,12 @@
 import {drizzle} from "drizzle-orm/node-postgres";
 import {Pool} from "pg";
 
-import {getConnectionString, parseDbConfig} from "./config";
+import config from "./config";
 import * as schema from "./schema";
-
-// Parse and validate config
-const config = parseDbConfig();
-const connectionString = getConnectionString(config);
 
 // Create connection pool
 const pool = new Pool({
-	connectionString,
+	connectionString: config.database.url,
 	max: 10, // Maximum number of connections
 });
 
