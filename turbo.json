@@ -10,6 +10,7 @@
 		"LOG_LEVEL",
 		"LOGGING_TRANSPORT_SLACK_WEBHOOK_URL",
 		"LOGGING_TRANSPORT_FILE_*",
+		"DATABASE_URL",
 		"DATABASE_HOST",
 		"DATABASE_PORT",
 		"DATABASE_USER",
@@ -40,6 +41,19 @@
 			"dependsOn": ["^check-types"]
 		},
 		"dev": {
+			"cache": false,
+			"persistent": true
+		},
+		"db:generate": {
+			"cache": false
+		},
+		"db:migrate": {
+			"cache": false
+		},
+		"db:push": {
+			"cache": false
+		},
+		"db:studio": {
 			"cache": false,
 			"persistent": true
 		}
