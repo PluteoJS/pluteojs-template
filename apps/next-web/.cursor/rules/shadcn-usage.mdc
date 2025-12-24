@@ -1,0 +1,21 @@
+---
+description: Guidelines for using and customizing ShadCN UI components
+globs: src/components/lib/shadcn/ui/**
+alwaysApply: false
+---
+
+# ShadCN UI Components Usage Guidelines
+
+## Do Not Modify Original Components
+
+- **Preserve Original Files**: Avoid making direct changes to the components located in `src/components/lib/shadcn/ui/`. These files are managed by the ShadCN CLI and may be overwritten during updates.
+
+## Recommended Customization Approach
+
+- **Create Wrapper Components**: For any custom behavior or styling, create wrapper components in a separate directory, such as `src/components/`.
+
+- **Apply Tailwind CSS Classes**: Use Tailwind CSS utility classes within wrapper components to maintain consistency.
+
+## AI Assistance Configuration
+
+- **Restrict AI Modifications**: AI tools should avoid making changes to `src/components/lib/shadcn/ui/**`. Focus AI suggestions on wrapper components or consumption contexts.

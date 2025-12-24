@@ -1,102 +1,141 @@
 # PluteoJS
 
-A robust Node.js TypeScript template for backend applications with built-in database connectivity, authentication, and API structure.
+A full-stack TypeScript monorepo template for building scalable applications with Next.js, Express, and shared packages.
 
-[![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.md)
+Created by [Muhammad Swalah](https://swalahamani.com) at [HeedLabs](https://heedlabs.com).
 
-## 🌟 Overview
+## What's Inside?
 
-PluteoJS is a starter template for building scalable backend services with TypeScript. It provides a well-structured foundation with PostgreSQL database integration, authentication flows, and robust error handling.
+This Turborepo monorepo includes the following apps and packages:
 
-## 🚀 Features
+### Apps
 
-- **TypeScript-First**: Fully typed codebase with strict type checking
-- **Express.js v5.1.0**: Built on the latest Express framework for robust HTTP server implementation
-- **PostgreSQL Integration**: Using pg-promise for efficient database operations
-- **Repository Pattern**: Clean separation of data access logic
-- **Authentication**: Ready-to-use authentication routes and services
-- **Error Handling**: Comprehensive error handling throughout the application
-- **Logging**: Advanced logging with Winston across different environments
-- **Code Quality**: ESLint and Prettier for code quality and consistent style
-- **Git Hooks**: Husky for pre-commit and pre-push validations
-- **Versioning**: Standard-version for release management
-- **Environment Management**: Configuration for different environments (development, staging, production)
+| App                            | Description                                                     | Port |
+| ------------------------------ | --------------------------------------------------------------- | ---- |
+| `@pluteojs/next-web`           | Next.js 16 frontend with React 19, Redux Toolkit, and shadcn/ui | 4000 |
+| `@pluteojs/express-api-server` | Express.js REST API server with TypeScript                      | 3000 |
 
-## 📁 Project Structure
+### Packages
 
-```
-├── src/
-│   ├── App.ts                      # Application entry point
-│   ├── api/                        # API definition layer
-│   │   ├── middlewares/            # Express middlewares
-│   │   └── routes/                 # Express routes
-│   ├── config/                     # Configuration handling
-│   ├── constants/                  # Application constants
-│   │   ├── errors/                 # Error message definitions
-│   │   └── successMessages/        # Success message definitions
-│   ├── customTypes/                # TypeScript type definitions
-│   │   └── appDataTypes/           # Application-specific types
-│   ├── db/                         # Database related code
-│   │   ├── models/                 # Database entity models
-│   │   ├── repositories/           # Data access layer
-│   │   └── sql/                    # SQL query files
-│   ├── jobs/                       # Scheduled/recurring jobs
-│   ├── loaders/                    # Application bootstrapping
-│   ├── services/                   # Business logic layer
-│   ├── subscribers/                # Event handlers
-│   ├── util/                       # Utility functions
-│   └── validations/                # Request validation schemas
-├── logs/                           # Application log files
-├── ecosystem-staging.config.js     # PM2 configuration for staging
-├── eslint.config.mjs               # ESLint configuration
-├── nodemon.json                    # Nodemon configuration
-├── tsconfig.json                   # TypeScript configuration
-└── tsconfig.scripts.json           # TypeScript config for scripts
-```
+| Package                       | Description                                        |
+| ----------------------------- | -------------------------------------------------- |
+| `@pluteojs/api-types`         | Shared Zod validation schemas and TypeScript types |
+| `@pluteojs/database`          | Drizzle ORM setup with PostgreSQL                  |
+| `@pluteojs/email-templates`   | React Email templates                              |
+| `@pluteojs/eslint-config`     | Shared ESLint configurations                       |
+| `@pluteojs/typescript-config` | Shared TypeScript configurations                   |
 
-## 🛠️ Setup & Installation
+## Tech Stack
+
+- **Runtime**: Node.js 20+
+- **Package Manager**: pnpm
+- **Build System**: Turborepo
+- **Frontend**: Next.js 16, React 19, Tailwind CSS 4, shadcn/ui
+- **Backend**: Express.js, Drizzle ORM
+- **Database**: PostgreSQL
+- **Validation**: Zod
+- **State Management**: Redux Toolkit
+- **Type Safety**: TypeScript 5.9+
+
+## Getting Started
 
 ### Prerequisites
 
-- Node.js v22.14.0 (as specified in volta config)
-- PostgreSQL >= 13
-- Yarn v4.9.0 (as specified in volta config)
+- Node.js 20.9 or higher
+- pnpm 9+
+- PostgreSQL (for database package)
 
-We recommend using [Volta](https://volta.sh/) for managing Node.js and Yarn versions.
+### Installation
 
-## 📝 Scripts
+```bash
+# Clone the repository
+git clone <repository-url>
+cd pluteojs-template
 
-- `yarn lint`: Run linting checks
-- `yarn check-types`: Validate TypeScript types
-- `yarn format`: Format code with Prettier
-- `yarn start:dev`: Start development server with nodemon
-- `yarn build`: Build the application
-- `yarn start:production`: Build and start in production mode
-- `yarn inspect`: Start server in debug mode
-- `yarn release`: Create a new release using standard-version
+# Install dependencies
+pnpm install
+```
 
-## 🤝 Contributing
+### Development
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+```bash
+# Run all apps in development mode
+pnpm dev
 
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+# Run a specific app
+pnpm --filter @pluteojs/next-web dev
+pnpm --filter @pluteojs/express-api-server dev
+```
 
-## 📄 License
+### Build
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+```bash
+# Build all apps and packages
+pnpm build
 
-## 📚 References & Inspiration
+# Build a specific app/package
+pnpm --filter @pluteojs/next-web build
+pnpm --filter @pluteojs/express-api-server build
+```
 
-This project structure is inspired by best practices from:
+### Code Quality
 
-- [The Bulletproof Node.js Architecture](https://www.softwareontheroad.com/ideal-nodejs-project-structure/) - A comprehensive guide on structuring Node.js applications
-- [pg-promise-demo](https://github.com/vitaly-t/pg-promise-demo/tree/master) - Reference implementation for PostgreSQL integration using pg-promise
+```bash
+# Run linting across all packages
+pnpm lint
 
-## 👥 Acknowledgments
+# Run type checking across all packages
+pnpm check-types
 
-- [HeedLabs](https://heedlabs.com/) team for creating and maintaining this template
-- All the open-source libraries used in this project
+# Format code with Prettier
+pnpm format
+```
+
+## Project Structure
+
+```
+pluteojs-template/
+├── apps/
+│   ├── next-web/              # Next.js frontend application
+│   └── express-api-server/    # Express.js API server
+├── packages/
+│   ├── api-types/             # Shared Zod schemas & types
+│   ├── database/              # Drizzle ORM configuration
+│   ├── email-templates/       # React Email templates
+│   ├── eslint-config/         # Shared ESLint config
+│   └── typescript-config/     # Shared TypeScript config
+├── tooling/                   # Monorepo utilities
+├── turbo.json                 # Turborepo configuration
+└── pnpm-workspace.yaml        # pnpm workspace configuration
+```
+
+## Key Features
+
+- **Monorepo Architecture**: Organized codebase with shared packages and optimized builds
+- **Full-Stack TypeScript**: End-to-end type safety with shared types between frontend and backend
+- **Modern Tooling**: Latest versions of Next.js, React, and development tools
+- **Code Quality**: Pre-configured ESLint, Prettier, and TypeScript strict mode
+- **Database Ready**: Drizzle ORM with PostgreSQL support
+- **Email Templates**: React Email for transactional emails
+
+## Useful Commands
+
+| Command            | Description                        |
+| ------------------ | ---------------------------------- |
+| `pnpm dev`         | Start all apps in development mode |
+| `pnpm build`       | Build all apps and packages        |
+| `pnpm lint`        | Run ESLint across all packages     |
+| `pnpm check-types` | Run TypeScript type checking       |
+| `pnpm format`      | Format code with Prettier          |
+| `pnpm clean`       | Clean build artifacts              |
+
+## Learn More
+
+- [Turborepo Documentation](https://turborepo.com/docs)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Drizzle ORM Documentation](https://orm.drizzle.team)
+- [shadcn/ui Documentation](https://ui.shadcn.com)
+
+## License
+
+MIT

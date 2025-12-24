@@ -1,0 +1,22 @@
+{
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"extends": "@pluteojs/typescript-config/node-app.json",
+	"compilerOptions": {
+		"outDir": "./build",
+		"rootDir": "./",
+		"baseUrl": "./",
+		"paths": {
+			"*": ["src/*"],
+			"@api/*": ["src/api/*"],
+			"@config": ["src/config"],
+			"@constants/*": ["src/constants/*"],
+			"@services/*": ["src/services/*"],
+			"@util/*": ["src/util/*"],
+			"@customTypes/*": ["src/customTypes/*"],
+			"@validations/*": ["src/validations/*"],
+			"@loaders/*": ["src/loaders/*"]
+		}
+	},
+	"include": ["src/**/*"],
+	"exclude": ["node_modules", "build"]
+}

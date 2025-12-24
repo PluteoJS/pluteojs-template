@@ -1,0 +1,61 @@
+{
+	"$schema": "https://turborepo.com/schema.json",
+	"ui": "tui",
+	"globalEnv": [
+		"NODE_ENV",
+		"CUSTOM_TEMPLATE_SPECIFIC_ENV_VAR",
+		"SERVICE_NAME",
+		"PORT",
+		"HAS_CLUSTERING_ENABLED",
+		"LOG_LEVEL",
+		"LOGGING_TRANSPORT_SLACK_WEBHOOK_URL",
+		"LOGGING_TRANSPORT_FILE_*",
+		"DATABASE_URL",
+		"DATABASE_HOST",
+		"DATABASE_PORT",
+		"DATABASE_USER",
+		"DATABASE_USER_PASSWORD",
+		"DATABASE_NAME",
+		"JWT_ALGORITHM",
+		"JWT_ACCESS_TOKEN_EXPIRES_IN",
+		"JWT_REFRESH_TOKEN_EXPIRES_IN",
+		"JWT_SECRET_KEY_FILE_PATH",
+		"JWT_SECRET_KEY",
+		"EMAIL_SERVICE_MAILGUN_*",
+		"EMAIL_SERVICE_TRANSACTIONAL_SMTP_*",
+		"EMAIL_SERVICE_MARKETING_SMTP_*",
+		"PASSWORD_RESET_OTP_*",
+		"RESET_PASSWORD_*",
+		"EMAIL_VERIFICATION_*"
+	],
+	"tasks": {
+		"build": {
+			"dependsOn": ["^build"],
+			"inputs": ["$TURBO_DEFAULT$", ".env*"],
+			"outputs": [".next/**", "!.next/cache/**", "build/**", "dist/**"]
+		},
+		"lint": {
+			"dependsOn": ["^lint"]
+		},
+		"check-types": {
+			"dependsOn": ["^check-types"]
+		},
+		"dev": {
+			"cache": false,
+			"persistent": true
+		},
+		"db:generate": {
+			"cache": false
+		},
+		"db:migrate": {
+			"cache": false
+		},
+		"db:push": {
+			"cache": false
+		},
+		"db:studio": {
+			"cache": false,
+			"persistent": true
+		}
+	}
+}

@@ -1,0 +1,110 @@
+---
+description: Conventions and best practices for writing TypeScript code
+globs: *.ts,*.tsx
+alwaysApply: false
+---
+
+# TypeScript Coding Standards
+
+## Naming Conventions
+
+- Interface names must start with `i` and use PascalCase.
+  - Example: `iUser`, `iAuthPayload`, `iComponentProps`
+- Type aliases must end with `Type` and use camelCase.
+  - Example: `authType`, `tokenResponseType`
+- Use self-explanatory names for:
+  - Variables (e.g., `currentUserId`, not `id`, `i`, or `k`)
+  - Functions (e.g., `calculateTotal`, not `calc`)
+  - Enums, types, and interfaces
+
+## Function Style
+
+- Avoid single-line arrow functions **without explicit `return`**. Always use a block body for clarity, even if it's one line.
+  - Preferred:
+    ```ts
+    const getUserName = (user: iUser): string => {
+      return user.name;
+    };
+    ```
+  - Avoid:
+    ```ts
+    const getUserName = (user: iUser): string => user.name;
+    ```
+
+- Avoid using `.then()` for asynchronous code. Prefer `async/await` for better readability and error handling.
+
+  - Preferred:
+    ```ts
+    const userName = await getUserNameById(id);
+    ```
+
+  - Avoid:
+    ```ts
+    getUserNameById(id).then((name) => console.log(name));
+    ```
+
+## Spacing & Grouping
+
+- Add empty lines between:
+  - Logical code blocks
+  - Variable declarations and function calls
+  - Different hook calls in React (e.g., between `useState` and `useEffect`)
+- This improves readability and visual grouping of logic.
+
+## Documentation
+
+- Use JSDoc for all exported and non-exported functions and complex utilities.
+- Comment inside function bodies to explain:
+  - Non-obvious logic
+  - Side effects
+  - State or variable and constant's intent
+
+## Readability & Maintainability
+
+- Keep functions short and focused. Extract logic into helper functions if they do more than one thing.
+- Avoid deeply nested conditionals. Use early returns where appropriate.
+- Use `const` by default. Only use `let` when mutation is required.
+- Avoid magic numbers or strings. Replace with enums or named constants.
+- Avoid chaining `.map()`, `.filter()`, etc., inline. Prefer writing logic in a more declarative, readable structure, even if it spans multiple lines.
+
+## Imports
+
+- Group imports in the following order:
+  1. External libraries
+  2. Aliased internal modules (e.g., `@/services`)
+  3. Relative imports
+- Separate import groups with a blank line.
+
+## Type Safety
+
+- Always define types for props, return values, and function arguments.
+- Prefer TypeScript types/interfaces over `any`.
+- Avoid unnecessary `as` type assertions unless narrowing is required.
+
+## Example
+
+```ts
+import { getUserById } from "@/services/userService";
+
+export enum UserRole {
+  Admin = "admin",
+  Editor = "editor",
+  Viewer = "viewer",
+}
+
+interface iUserProps {
+  id: string;
+  name: string;
+  role: UserRole;
+}
+
+/**
+ * Fetches the user name based on user ID.
+ */
+const getUserNameById = async (userId: string): Promise<string> => {
+  const user = await getUserById(userId);
+
+  // Return the name of the user if found
+  return user.name;
+};
+```

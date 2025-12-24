@@ -1,0 +1,40 @@
+{
+	"name": "@pluteojs/next-web",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev --port 4000 --turbopack",
+		"build": "next build",
+		"start": "next start",
+		"lint": "eslint .",
+		"check-types": "tsc --noEmit"
+	},
+	"dependencies": {
+		"@pluteojs/api-types": "workspace:*",
+		"@radix-ui/react-slot": "^1.2.4",
+		"@reduxjs/toolkit": "^2.11.1",
+		"axios": "^1.13.2",
+		"class-variance-authority": "^0.7.1",
+		"clsx": "^2.1.1",
+		"lucide-react": "^0.556.0",
+		"next": "^16.0.7",
+		"react": "^19.2.1",
+		"react-dom": "^19.2.1",
+		"react-redux": "^9.2.0",
+		"redux-logger": "^3.0.6",
+		"tailwind-merge": "^3.4.0",
+		"tw-animate-css": "^1.2.5",
+		"uuid": "^13.0.0"
+	},
+	"devDependencies": {
+		"@pluteojs/eslint-config": "workspace:*",
+		"@pluteojs/typescript-config": "workspace:*",
+		"@tailwindcss/postcss": "^4.1.17",
+		"@types/node": "^24",
+		"@types/react": "^19.2.7",
+		"@types/react-dom": "^19.2.3",
+		"@types/redux-logger": "^3",
+		"tailwindcss": "^4.1.17",
+		"typescript": "^5.9.3"
+	}
+}
