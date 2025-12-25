@@ -7,7 +7,7 @@ import {AxiosRequestConfig} from "axios";
  * such as environment files or via a remote configuration manager.
  */
 const API_SERVER_BASE_URL =
-	process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";
+	process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3020";
 
 /**
  * The request timeout of the api server needs to be configured here.

@@ -1,11 +1,11 @@
-import {asTypeIServiceError} from "@customTypes/serviceTypes";
+import {asTypeIResponseError} from "@customTypes/responseTypes";
 
-export const usersServiceError = asTypeIServiceError({
+export const usersServiceError = asTypeIResponseError({
 	getUserDetails: {
 		UserDoesNotExists: {
 			error: "UserDoesNotExists",
-
 			message: "User doesn't exists",
+			details: null,
 		},
 	},
 });

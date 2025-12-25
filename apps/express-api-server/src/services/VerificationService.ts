@@ -11,14 +11,13 @@ import {
 
 import logger from "@loaders/logger";
 import config from "@config";
-import serviceUtil from "@util/serviceUtil";
 import verificationUtil from "@util/verificationUtil";
 import securityUtil from "@util/securityUtil";
 
-import type {iGenericServiceResult} from "@customTypes/serviceTypes";
 import {httpStatusCodes} from "@customTypes/networkTypes";
 import type {NullableString} from "@customTypes/commonTypes";
 
+import {ServiceError} from "@errors/ServiceError";
 import {verificationServiceErrors} from "@constants/errors/verificationServiceErrors";
 import {momentUnitsOfTime} from "@constants/dateTimeConstants";
 
@@ -28,15 +27,14 @@ export default class VerificationService {
 	emailService = new EmailService();
 
 	public async requestEmailVerification(
-		uniqueRequestId: NullableString,
 		email: string,
 		ipAddress: NullableString
-	): Promise<iGenericServiceResult<null>> {
+	): Promise<null> {
 		return db.transaction(async (tx) => {
 			const sendEmailVerificationOtpEmail = async (
 				id: NullableString = null,
 				otpToSend: NullableString = null
-			): Promise<iGenericServiceResult<null>> => {
+			): Promise<null> => {
 				const otp =
 					otpToSend ||
 					(await verificationUtil.generateEmailVerificationOTP(
@@ -80,12 +78,7 @@ export default class VerificationService {
 					});
 				}
 
-				return serviceUtil.buildResult(
-					true,
-					httpStatusCodes.SUCCESS_OK,
-					uniqueRequestId,
-					null
-				);
+				return null;
 			};
 
 			const lastEmailVerificationRequestRecords = await tx
@@ -165,10 +158,8 @@ export default class VerificationService {
 				return sendEmailVerificationOtpEmail();
 			}
 
-			return serviceUtil.buildResult(
-				false,
+			throw new ServiceError(
 				httpStatusCodes.CLIENT_ERROR_BAD_REQUEST,
-				uniqueRequestId,
 				verificationServiceErrors.emailVerificationRequest
 					.RetryNotAllowedWithinCoolDownPeriod
 			);
@@ -176,14 +167,13 @@ export default class VerificationService {
 	}
 
 	public async verifyEmail(
-		uniqueRequestId: NullableString,
 		email: string,
 		otp: string,
 		dbTransaction: DBTransaction | null = null
-	): Promise<iGenericServiceResult<null>> {
+	): Promise<null> {
 		const handleEmailVerification = async (
 			transaction: DBTransaction
-		): Promise<iGenericServiceResult<null>> => {
+		): Promise<null> => {
 			const lastEmailVerificationRequestRecords = await transaction
 				.select()
 				.from(emailVerificationRequestLogs)
@@ -228,10 +218,8 @@ export default class VerificationService {
 								)
 							);
 
-						return serviceUtil.buildResult(
-							false,
+						throw new ServiceError(
 							httpStatusCodes.CLIENT_ERROR_BAD_REQUEST,
-							uniqueRequestId,
 							verificationServiceErrors.verifyEmailRequest.OtpExpired
 						);
 					}
@@ -250,33 +238,23 @@ export default class VerificationService {
 								)
 							);
 
-						return serviceUtil.buildResult(
-							true,
-							httpStatusCodes.SUCCESS_OK,
-							uniqueRequestId,
-							null
-						);
+						return null;
 					}
 
-					return serviceUtil.buildResult(
-						false,
+					throw new ServiceError(
 						httpStatusCodes.CLIENT_ERROR_BAD_REQUEST,
-						uniqueRequestId,
 						verificationServiceErrors.verifyEmailRequest.InvalidOtp
 					);
 				}
-				return serviceUtil.buildResult(
-					false,
+
+				throw new ServiceError(
 					httpStatusCodes.CLIENT_ERROR_BAD_REQUEST,
-					uniqueRequestId,
 					verificationServiceErrors.verifyEmailRequest.OtpExpired
 				);
 			}
 
-			return serviceUtil.buildResult(
-				false,
+			throw new ServiceError(
 				httpStatusCodes.CLIENT_ERROR_BAD_REQUEST,
-				uniqueRequestId,
 				verificationServiceErrors.verifyEmailRequest.NoVerificationRequestFound
 			);
 		};

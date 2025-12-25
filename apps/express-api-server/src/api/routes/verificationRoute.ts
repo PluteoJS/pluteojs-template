@@ -43,19 +43,11 @@ export default (route: Router): void => {
 				const {email} = req.body;
 				const ipAddress = expressUtil.getClientIp(req);
 
-				const result = await verificationService.requestEmailVerification(
-					uniqueRequestId,
-					email,
-					ipAddress
-				);
-				const {httpStatusCode} = result;
-
-				res.status(httpStatusCode).json(result);
+				await verificationService.requestEmailVerification(email, ipAddress);
+				res.ok(null);
 			} catch (error) {
 				next(error);
 			}
-
-			return;
 		}
 	);
 };

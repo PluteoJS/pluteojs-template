@@ -41,7 +41,7 @@ export default {
 	},
 
 	// server port
-	port: parseInt(process.env.PORT || "3000", 10),
+	port: parseInt(process.env.PORT || "3020", 10),
 
 	// clustering
 	clusterOptions: {

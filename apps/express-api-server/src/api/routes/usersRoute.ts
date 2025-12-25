@@ -39,15 +39,11 @@ export default (route: Router): void => {
 					throw new Error("User ID not found in token");
 				}
 
-				const result = await usersService.getUserDetails(uniqueRequestId, userId);
-				const {httpStatusCode} = result;
-
-				res.status(httpStatusCode).json(result);
+				const data = await usersService.getUserDetails(userId);
+				res.ok(data);
 			} catch (error) {
 				next(error);
 			}
-
-			return;
 		}
 	);
 };

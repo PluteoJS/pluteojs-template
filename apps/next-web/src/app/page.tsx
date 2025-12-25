@@ -141,7 +141,7 @@ export default function Home() {
 							</CodeBlock>
 							<p className="text-muted-foreground text-sm">
 								Starts the development server with Turbopack for faster
-								refreshes at http://localhost:4000
+								refreshes at http://localhost:4020
 							</p>
 						</div>
 						<div>

@@ -14,7 +14,8 @@
 			"@util/*": ["src/util/*"],
 			"@customTypes/*": ["src/customTypes/*"],
 			"@validations/*": ["src/validations/*"],
-			"@loaders/*": ["src/loaders/*"]
+			"@loaders/*": ["src/loaders/*"],
+			"@errors/*": ["src/errors/*"]
 		}
 	},
 	"include": ["src/**/*"],

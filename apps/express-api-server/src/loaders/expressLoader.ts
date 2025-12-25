@@ -6,15 +6,16 @@ import type {ZodError} from "zod";
 
 import config from "@config";
 import apiRoutes from "@api/index";
+import {responseEnvelope} from "@api/middlewares";
 import logger from "@loaders/logger";
 
-import serviceUtil from "@util/serviceUtil";
 import securityUtil from "@util/securityUtil";
 
 import {httpStatusCodes} from "@customTypes/networkTypes";
-import type {ValidationErrorsType, iValidationErrorDetails} from "@customTypes/serviceTypes";
+import type {iResponseError} from "@customTypes/responseTypes";
 
 import {genericServiceErrors} from "@constants/errors/genericServiceErrors";
+import {ServiceError} from "@errors/ServiceError";
 
 import PackageJSON from "../../package.json";
 
@@ -47,21 +48,20 @@ const addRequestId: RequestHandler = (req, res, next) => {
  * @param next
  */
 const resourceNotFoundHandler: RequestHandler = (req, res) => {
-	const uniqueRequestId = (req as express.Request & {uniqueRequestId: string}).uniqueRequestId;
-
-	const result = serviceUtil.buildResult(
-		false,
-		httpStatusCodes.CLIENT_ERROR_NOT_FOUND,
-		uniqueRequestId,
-		genericServiceErrors.errors.ResourceNotFound
+	return res.fail(
+		genericServiceErrors.errors.ResourceNotFound,
+		httpStatusCodes.CLIENT_ERROR_NOT_FOUND
 	);
-
-	const {httpStatusCode} = result;
-
-	res.status(httpStatusCode).json(result);
-
-	return;
 };
+
+/**
+ * Validation error details structure for the response.
+ */
+interface iValidationErrorDetails {
+	source: string;
+	keys: (string | number)[];
+	message: string;
+}
 
 /**
  * Handle Zod validation errors.
@@ -76,7 +76,7 @@ const zodValidationErrorHandler: ErrorRequestHandler = (err, req, res, next) => 
 	// Check if it's a Zod error
 	if (err && err.name === "ZodError") {
 		const zodError = err as ZodError;
-		const validationErrors: ValidationErrorsType = {};
+		const validationErrors: Record<string, iValidationErrorDetails> = {};
 
 		zodError.errors.forEach((error) => {
 			const segment = "body";
@@ -85,7 +85,7 @@ const zodValidationErrorHandler: ErrorRequestHandler = (err, req, res, next) => 
 					source: segment,
 					keys: [],
 					message: "",
-				} as iValidationErrorDetails;
+				};
 			}
 			validationErrors[segment].keys.push(error.path[0] || "unknown");
 			validationErrors[segment].message = zodError.errors
@@ -95,22 +95,12 @@ const zodValidationErrorHandler: ErrorRequestHandler = (err, req, res, next) => 
 				.join(", ");
 		});
 
-		const uniqueRequestId = (req as express.Request & {uniqueRequestId: string}).uniqueRequestId;
+		const errorResponse: iResponseError = {
+			...genericServiceErrors.errors.ValidationError,
+			details: {validationErrors},
+		};
 
-		const result = serviceUtil.buildResult(
-			false,
-			httpStatusCodes.CLIENT_ERROR_BAD_REQUEST,
-			uniqueRequestId,
-			{
-				...genericServiceErrors.errors.ValidationError,
-				validationErrors,
-			},
-			null
-		);
-
-		res.status(httpStatusCodes.CLIENT_ERROR_BAD_REQUEST).json(result).end();
-
-		return;
+		return res.fail(errorResponse, httpStatusCodes.CLIENT_ERROR_BAD_REQUEST);
 	}
 
 	next(err);
@@ -132,20 +122,10 @@ const unAuthorizedErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
 	 * Handle 401 thrown by express-jwt library
 	 */
 	if (err.name === "UnauthorizedError") {
-		const uniqueRequestId = (req as express.Request & {uniqueRequestId: string}).uniqueRequestId;
-
-		const result = serviceUtil.buildResult(
-			false,
-			httpStatusCodes.CLIENT_ERROR_UNAUTHORIZED,
-			uniqueRequestId,
-			genericServiceErrors.auth.NoAuthorizationToken
+		return res.fail(
+			genericServiceErrors.auth.NoAuthorizationToken,
+			httpStatusCodes.CLIENT_ERROR_UNAUTHORIZED
 		);
-
-		const {httpStatusCode} = result;
-
-		res.status(httpStatusCode).json(result).end();
-
-		return;
 	}
 
 	next(err);
@@ -154,7 +134,7 @@ const unAuthorizedErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
 };
 
 /**
- * Handles all other generic error.
+ * Handles all other generic errors including ServiceError.
  *
  * @param err
  * @param req
@@ -164,6 +144,11 @@ const unAuthorizedErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
 const genericErrorHandler: ErrorRequestHandler = (err, req, res, _next) => {
 	const uniqueRequestId = (req as express.Request & {uniqueRequestId: string}).uniqueRequestId;
 
+	// Handle ServiceError thrown by service layer
+	if (err instanceof ServiceError) {
+		return res.fail(err.serviceError, err.httpStatusCode);
+	}
+
 	// Log the actual error for debugging
 	logger.error(uniqueRequestId, "Unhandled error in request", err, {
 		path: req.path,
@@ -172,18 +157,10 @@ const genericErrorHandler: ErrorRequestHandler = (err, req, res, _next) => {
 		errorStack: err?.stack,
 	});
 
-	const result = serviceUtil.buildResult(
-		false,
-		httpStatusCodes.SERVER_ERROR_INTERNAL_SERVER_ERROR,
-		uniqueRequestId,
-		genericServiceErrors.errors.SomethingWentWrong
+	return res.fail(
+		genericServiceErrors.errors.SomethingWentWrong,
+		httpStatusCodes.SERVER_ERROR_INTERNAL_SERVER_ERROR
 	);
-
-	const {httpStatusCode} = result;
-
-	res.status(httpStatusCode).json(result).end();
-
-	return;
 };
 
 /**
@@ -193,26 +170,12 @@ const genericErrorHandler: ErrorRequestHandler = (err, req, res, _next) => {
  * @param res
  */
 const rootRequestHandler: RequestHandler = (req, res) => {
-	const uniqueRequestId = (req as express.Request & {uniqueRequestId: string}).uniqueRequestId;
-
 	const data = {
 		name: config.serviceInfo.name,
 		version: PackageJSON.version,
 	};
 
-	const result = serviceUtil.buildResult(
-		true,
-		httpStatusCodes.SUCCESS_OK,
-		uniqueRequestId,
-		null,
-		data
-	);
-
-	const {httpStatusCode} = result;
-
-	res.status(httpStatusCode).json(result).end();
-
-	return;
+	return res.ok(data);
 };
 
 /**
@@ -222,27 +185,13 @@ const rootRequestHandler: RequestHandler = (req, res) => {
  * @param res
  */
 const statusRequestHandler: RequestHandler = (req, res) => {
-	const uniqueRequestId = (req as express.Request & {uniqueRequestId: string}).uniqueRequestId;
-
 	const data = {
 		name: PackageJSON.name,
 		version: PackageJSON.version,
 		status: "OK",
 	};
 
-	const result = serviceUtil.buildResult(
-		true,
-		httpStatusCodes.SUCCESS_OK,
-		uniqueRequestId,
-		null,
-		data
-	);
-
-	const {httpStatusCode} = result;
-
-	res.status(httpStatusCode).json(result).end();
-
-	return;
+	return res.ok(data);
 };
 
 /**
@@ -264,6 +213,9 @@ const loadExpress = ({app}: {app: express.Application}): void => {
 
 	// adds a unique id to each request
 	app.use(addRequestId);
+
+	// Response envelope middleware - adds res.ok() and res.fail() helpers
+	app.use(responseEnvelope);
 
 	// Transforms the raw string of req.body into json
 	app.use(express.json());

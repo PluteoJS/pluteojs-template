@@ -2,18 +2,32 @@ import type {Request, Response, NextFunction, RequestHandler} from "express";
 import type {ZodSchema, ZodError} from "zod";
 
 import {httpStatusCodes} from "@customTypes/networkTypes";
-import type {ValidationErrorsType} from "@customTypes/serviceTypes";
-import serviceUtil from "@util/serviceUtil";
+import type {iResponseError} from "@customTypes/responseTypes";
 import {genericServiceErrors} from "@constants/errors/genericServiceErrors";
 
+// Import expressTypes to ensure the global augmentation is applied
+import "@customTypes/expressTypes";
+
 /**
- * Formats Zod validation errors into the expected ValidationErrorsType format.
+ * Validation error details structure.
+ */
+interface iValidationErrorDetails {
+	source: string;
+	keys: (string | number)[];
+	message: string;
+}
+
+/**
+ * Formats Zod validation errors into the expected format.
  *
  * @param error - The Zod error object
  * @param segment - The request segment (body, query, params)
  * @returns Formatted validation errors
  */
-function formatZodErrors(error: ZodError, segment: string): ValidationErrorsType {
+function formatZodErrors(
+	error: ZodError,
+	segment: string
+): Record<string, iValidationErrorDetails> {
 	const keys = error.errors.map((err) => {
 		return err.path[0] || "unknown";
 	});
@@ -42,20 +56,13 @@ export function validateBody<T>(schema: ZodSchema<T>): RequestHandler {
 
 		if (!result.success) {
 			const validationErrors = formatZodErrors(result.error, "body");
-			const uniqueRequestId = (req as Request & {uniqueRequestId?: string}).uniqueRequestId || null;
 
-			const response = serviceUtil.buildResult(
-				false,
-				httpStatusCodes.CLIENT_ERROR_BAD_REQUEST,
-				uniqueRequestId,
-				{
-					...genericServiceErrors.errors.ValidationError,
-					validationErrors,
-				},
-				null
-			);
+			const errorResponse: iResponseError = {
+				...genericServiceErrors.errors.ValidationError,
+				details: {validationErrors},
+			};
 
-			res.status(httpStatusCodes.CLIENT_ERROR_BAD_REQUEST).json(response).end();
+			res.fail(errorResponse, httpStatusCodes.CLIENT_ERROR_BAD_REQUEST);
 			return;
 		}
 
@@ -77,20 +84,13 @@ export function validateQuery<T>(schema: ZodSchema<T>): RequestHandler {
 
 		if (!result.success) {
 			const validationErrors = formatZodErrors(result.error, "query");
-			const uniqueRequestId = (req as Request & {uniqueRequestId?: string}).uniqueRequestId || null;
 
-			const response = serviceUtil.buildResult(
-				false,
-				httpStatusCodes.CLIENT_ERROR_BAD_REQUEST,
-				uniqueRequestId,
-				{
-					...genericServiceErrors.errors.ValidationError,
-					validationErrors,
-				},
-				null
-			);
+			const errorResponse: iResponseError = {
+				...genericServiceErrors.errors.ValidationError,
+				details: {validationErrors},
+			};
 
-			res.status(httpStatusCodes.CLIENT_ERROR_BAD_REQUEST).json(response).end();
+			res.fail(errorResponse, httpStatusCodes.CLIENT_ERROR_BAD_REQUEST);
 			return;
 		}
 
@@ -110,20 +110,13 @@ export function validateParams<T>(schema: ZodSchema<T>): RequestHandler {
 
 		if (!result.success) {
 			const validationErrors = formatZodErrors(result.error, "params");
-			const uniqueRequestId = (req as Request & {uniqueRequestId?: string}).uniqueRequestId || null;
 
-			const response = serviceUtil.buildResult(
-				false,
-				httpStatusCodes.CLIENT_ERROR_BAD_REQUEST,
-				uniqueRequestId,
-				{
-					...genericServiceErrors.errors.ValidationError,
-					validationErrors,
-				},
-				null
-			);
+			const errorResponse: iResponseError = {
+				...genericServiceErrors.errors.ValidationError,
+				details: {validationErrors},
+			};
 
-			res.status(httpStatusCodes.CLIENT_ERROR_BAD_REQUEST).json(response).end();
+			res.fail(errorResponse, httpStatusCodes.CLIENT_ERROR_BAD_REQUEST);
 			return;
 		}
 

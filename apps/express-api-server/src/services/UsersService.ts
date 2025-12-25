@@ -1,20 +1,15 @@
 import {db, eq, users} from "@pluteojs/database";
 
 import logger from "@loaders/logger";
-import serviceUtil from "@util/serviceUtil";
 
-import type {iGenericServiceResult} from "@customTypes/serviceTypes";
 import {httpStatusCodes} from "@customTypes/networkTypes";
 import type {iUser} from "@customTypes/appDataTypes/userTypes";
 
+import {ServiceError} from "@errors/ServiceError";
 import {usersServiceError} from "@constants/errors/usersServiceErrors";
-import type {NullableString} from "@customTypes/commonTypes";
 
 export default class UsersService {
-	public async getUserDetails(
-		uniqueRequestId: NullableString,
-		userId: string
-	): Promise<iGenericServiceResult<iUser | null>> {
+	public async getUserDetails(userId: string): Promise<iUser> {
 		logger.silly("Retrieving the userRecord by user id");
 		const userRecords = await db
 			.select()
@@ -34,20 +29,12 @@ export default class UsersService {
 				createdAt: userRecord.createdAt?.toISOString() ?? "",
 			};
 
-			return serviceUtil.buildResult(
-				true,
-				httpStatusCodes.SUCCESS_OK,
-				uniqueRequestId,
-				null,
-				userDetails
-			);
+			return userDetails;
 		}
 
 		logger.silly("No such userRecord with id as userId found");
-		return serviceUtil.buildResult(
-			false,
+		throw new ServiceError(
 			httpStatusCodes.CLIENT_ERROR_BAD_REQUEST,
-			uniqueRequestId,
 			usersServiceError.getUserDetails.UserDoesNotExists
 		);
 	}

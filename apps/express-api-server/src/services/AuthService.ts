@@ -13,17 +13,14 @@ import resetPasswordUtil from "@util/resetPasswordUtil";
 import logger from "@loaders/logger";
 import config from "@config";
 import securityUtil from "@util/securityUtil";
-import serviceUtil from "@util/serviceUtil";
 
-import type {
-	iGenericServiceResult,
-	NullableServiceSuccess,
-} from "@customTypes/serviceTypes";
 import {httpStatusCodes} from "@customTypes/networkTypes";
 import type {iTokenPair} from "@customTypes/appDataTypes/authTypes";
 import type {iUser, iUserInputDTO} from "@customTypes/appDataTypes/userTypes";
 import type {NullableString} from "@customTypes/commonTypes";
+import type {NullableServiceSuccess} from "@customTypes/serviceTypes";
 
+import {ServiceError} from "@errors/ServiceError";
 import {authServiceErrors} from "@constants/errors/authServiceErrors";
 import {authServiceSuccessMessage} from "@constants/successes/authServiceSuccessMessages";
 import {momentUnitsOfTime} from "@constants/dateTimeConstants";
@@ -36,12 +33,7 @@ export default class AuthService {
 	public async signUp(
 		uniqueRequestId: NullableString,
 		userInputDTO: iUserInputDTO
-	): Promise<
-		iGenericServiceResult<{
-			user: iUser;
-			tokens: iTokenPair;
-		} | null>
-	> {
+	): Promise<{user: iUser; tokens: iTokenPair}> {
 		const {firstName, lastName, email, password} = userInputDTO;
 
 		return db.transaction(async (tx) => {
@@ -53,10 +45,8 @@ export default class AuthService {
 
 			if (currentUserRecords[0]) {
 				logger.silly("Abort sign up: user already exits");
-				return serviceUtil.buildResult(
-					false,
+				throw new ServiceError(
 					httpStatusCodes.CLIENT_ERROR_BAD_REQUEST,
-					uniqueRequestId,
 					authServiceErrors.signUp.UserAlreadyExists
 				);
 			}
@@ -111,27 +101,17 @@ export default class AuthService {
 				);
 			}
 
-			return serviceUtil.buildResult(
-				true,
-				httpStatusCodes.SUCCESS_OK,
-				uniqueRequestId,
-				null,
-				{
-					user,
-					tokens: {
-						accessToken,
-						refreshToken,
-					},
-				}
-			);
+			return {
+				user,
+				tokens: {
+					accessToken,
+					refreshToken,
+				},
+			};
 		});
 	}
 
-	public async signIn(
-		uniqueRequestId: NullableString,
-		email: string,
-		password: string
-	): Promise<iGenericServiceResult<iTokenPair | null>> {
+	public async signIn(email: string, password: string): Promise<iTokenPair> {
 		logger.silly("Retrieving the userRecord by email id");
 		const userRecords = await db
 			.select()
@@ -160,29 +140,19 @@ export default class AuthService {
 					}
 				);
 
-				return serviceUtil.buildResult(
-					true,
-					httpStatusCodes.SUCCESS_OK,
-					uniqueRequestId,
-					null,
-					tokenPair
-				);
+				return tokenPair;
 			}
 
 			logger.silly("Abort sign in: incorrect password");
-			return serviceUtil.buildResult(
-				false,
+			throw new ServiceError(
 				httpStatusCodes.CLIENT_ERROR_BAD_REQUEST,
-				uniqueRequestId,
 				authServiceErrors.signIn.IncorrectUserCredential
 			);
 		}
 
 		logger.silly("Abort sign in: user doesn't exits");
-		return serviceUtil.buildResult(
-			false,
+		throw new ServiceError(
 			httpStatusCodes.CLIENT_ERROR_BAD_REQUEST,
-			uniqueRequestId,
 			authServiceErrors.signIn.IncorrectUserCredential
 		);
 	}
@@ -190,7 +160,7 @@ export default class AuthService {
 	public async renewAccessToken(
 		uniqueRequestId: NullableString,
 		refreshToken: string
-	): Promise<iGenericServiceResult<iTokenPair | null>> {
+	): Promise<iTokenPair> {
 		const {isValid, decodedToken} = securityUtil.verifyJWT(
 			uniqueRequestId,
 			refreshToken
@@ -211,29 +181,20 @@ export default class AuthService {
 				}
 			);
 
-			return serviceUtil.buildResult(
-				true,
-				httpStatusCodes.SUCCESS_OK,
-				uniqueRequestId,
-				null,
-				tokenPair
-			);
+			return tokenPair;
 		}
 
 		logger.silly("Abort renew access token: invalid refreshToken");
-		return serviceUtil.buildResult(
-			false,
+		throw new ServiceError(
 			httpStatusCodes.CLIENT_ERROR_BAD_REQUEST,
-			uniqueRequestId,
 			authServiceErrors.renewAccessToken.InvalidRefreshToken
 		);
 	}
 
 	public async requestResetPassword(
-		uniqueRequestId: NullableString,
 		email: string,
 		ipAddress: NullableString
-	): Promise<iGenericServiceResult<null>> {
+	): Promise<null> {
 		return db.transaction(async (tx) => {
 			logger.silly("Retrieving the userRecord by email id");
 			const userRecords = await tx
@@ -245,7 +206,7 @@ export default class AuthService {
 			const userRecord = userRecords[0];
 
 			if (userRecord) {
-				const sendOtpEmail = async (): Promise<iGenericServiceResult<null>> => {
+				const sendOtpEmail = async (): Promise<void> => {
 					const user: iUser = {
 						id: userRecord.id,
 						firstName: userRecord.firstName,
@@ -281,14 +242,6 @@ export default class AuthService {
 						isOtpUsable: true,
 						createdAt: new Date(),
 					});
-
-					return serviceUtil.buildResult(
-						true,
-						httpStatusCodes.SUCCESS_OK,
-						uniqueRequestId,
-						null,
-						null
-					);
 				};
 
 				const lastUserRecords = await tx
@@ -320,25 +273,13 @@ export default class AuthService {
 						logger.silly(
 							`Got a requesting less than ${config.resetPasswordConfig.retryIntervalInMinutes} mnts. Skipping email`
 						);
-						return serviceUtil.buildResult(
-							true,
-							httpStatusCodes.SUCCESS_OK,
-							uniqueRequestId,
-							null,
-							null
-						);
+						return null;
 					}
 				}
 				await sendOtpEmail();
 			}
 
-			return serviceUtil.buildResult(
-				true,
-				httpStatusCodes.SUCCESS_OK,
-				uniqueRequestId,
-				null,
-				null
-			);
+			return null;
 		});
 	}
 
@@ -347,7 +288,7 @@ export default class AuthService {
 		email: string,
 		otp: string,
 		newPassword: string
-	): Promise<iGenericServiceResult<NullableServiceSuccess>> {
+	): Promise<NullableServiceSuccess> {
 		return db.transaction(async (transaction) => {
 			logger.debug(
 				uniqueRequestId,
@@ -427,44 +368,29 @@ export default class AuthService {
 
 								logger.silly("OTP invalidated ");
 
-								return serviceUtil.buildResult(
-									true,
-									httpStatusCodes.SUCCESS_OK,
-									uniqueRequestId,
-									null,
-									authServiceSuccessMessage.passwordReset.passwordResetSuccess
-								);
+								return authServiceSuccessMessage.passwordReset.passwordResetSuccess;
 							}
 						} else {
 							logger.silly("OTP expired");
 
-							return serviceUtil.buildResult(
-								false,
+							throw new ServiceError(
 								httpStatusCodes.CLIENT_ERROR_BAD_REQUEST,
-								uniqueRequestId,
-								authServiceErrors.resetPassword.otpExpired,
-								null
+								authServiceErrors.resetPassword.otpExpired
 							);
 						}
 
 						logger.silly("OTP is not verified");
-						return serviceUtil.buildResult(
-							false,
+						throw new ServiceError(
 							httpStatusCodes.CLIENT_ERROR_BAD_REQUEST,
-							uniqueRequestId,
-							authServiceErrors.resetPassword.otpNotVerified,
-							null
+							authServiceErrors.resetPassword.otpNotVerified
 						);
 					}
 
 					logger.silly("OTP is not usable ");
 
-					return serviceUtil.buildResult(
-						false,
+					throw new ServiceError(
 						httpStatusCodes.CLIENT_ERROR_BAD_REQUEST,
-						uniqueRequestId,
-						authServiceErrors.resetPassword.otpExpired,
-						null
+						authServiceErrors.resetPassword.otpExpired
 					);
 				}
 
@@ -477,12 +403,9 @@ export default class AuthService {
 					}
 				);
 
-				return serviceUtil.buildResult(
-					false,
+				throw new ServiceError(
 					httpStatusCodes.CLIENT_ERROR_BAD_REQUEST,
-					uniqueRequestId,
-					authServiceErrors.resetPassword.otpNotIssued,
-					null
+					authServiceErrors.resetPassword.otpNotIssued
 				);
 			}
 
@@ -490,12 +413,9 @@ export default class AuthService {
 				email,
 			});
 
-			return serviceUtil.buildResult(
-				false,
+			throw new ServiceError(
 				httpStatusCodes.CLIENT_ERROR_BAD_REQUEST,
-				uniqueRequestId,
-				authServiceErrors.resetPassword.userNotExist,
-				null
+				authServiceErrors.resetPassword.userNotExist
 			);
 		});
 	}

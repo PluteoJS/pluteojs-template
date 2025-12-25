@@ -49,15 +49,11 @@ export default (route: Router): void => {
 			});
 
 			try {
-				const result = await authService.signUp(uniqueRequestId, req.body);
-				const {httpStatusCode} = result;
-
-				res.status(httpStatusCode).json(result);
+				const data = await authService.signUp(uniqueRequestId, req.body);
+				res.ok(data);
 			} catch (error) {
 				next(error);
 			}
-
-			return;
 		}
 	);
 
@@ -81,15 +77,11 @@ export default (route: Router): void => {
 
 			try {
 				const {email, password} = req.body;
-				const result = await authService.signIn(uniqueRequestId, email, password);
-				const {httpStatusCode} = result;
-
-				res.status(httpStatusCode).json(result);
+				const data = await authService.signIn(email, password);
+				res.ok(data);
 			} catch (error) {
 				next(error);
 			}
-
-			return;
 		}
 	);
 
@@ -111,18 +103,14 @@ export default (route: Router): void => {
 
 			try {
 				const {refreshToken} = req.body;
-				const result = await authService.renewAccessToken(
+				const data = await authService.renewAccessToken(
 					uniqueRequestId,
 					refreshToken
 				);
-				const {httpStatusCode} = result;
-
-				res.status(httpStatusCode).json(result);
+				res.ok(data);
 			} catch (error) {
 				next(error);
 			}
-
-			return;
 		}
 	);
 
@@ -151,19 +139,11 @@ export default (route: Router): void => {
 				const {email} = req.body;
 				const ipAddress = expressUtil.getClientIp(req);
 
-				const result = await authService.requestResetPassword(
-					uniqueRequestId,
-					email,
-					ipAddress
-				);
-				const {httpStatusCode} = result;
-
-				res.status(httpStatusCode).json(result);
+				await authService.requestResetPassword(email, ipAddress);
+				res.ok(null);
 			} catch (error) {
 				next(error);
 			}
-
-			return;
 		}
 	);
 
@@ -189,20 +169,16 @@ export default (route: Router): void => {
 
 			try {
 				const {email, otp, newPassword} = req.body;
-				const result = await authService.resetPassword(
+				const data = await authService.resetPassword(
 					uniqueRequestId,
 					email,
 					otp,
 					newPassword
 				);
-				const {httpStatusCode} = result;
-
-				res.status(httpStatusCode).json(result);
+				res.ok(data);
 			} catch (error) {
 				next(error);
 			}
-
-			return;
 		}
 	);
 };
