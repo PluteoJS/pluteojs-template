@@ -15,7 +15,8 @@
 			"@customTypes/*": ["src/customTypes/*"],
 			"@validations/*": ["src/validations/*"],
 			"@loaders/*": ["src/loaders/*"],
-			"@errors/*": ["src/errors/*"]
+			"@errors/*": ["src/errors/*"],
+			"@openapi/*": ["src/openapi/*"]
 		}
 	},
 	"include": ["src/**/*"],

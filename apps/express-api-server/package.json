@@ -13,13 +13,14 @@
 		"inspect": "nodemon --inspect ./src/App.ts"
 	},
 	"dependencies": {
-		"@pluteojs/types": "^0.1.2",
+		"@asteasolutions/zod-to-openapi": "^8.4.0",
 		"@pluteojs/api-types": "workspace:*",
 		"@pluteojs/better-auth": "workspace:*",
 		"@pluteojs/database": "workspace:*",
 		"@pluteojs/email-templates": "workspace:*",
-		"better-auth": "^1.2.8",
+		"@pluteojs/types": "^0.1.2",
 		"argon2": "^0.41.1",
+		"better-auth": "^1.2.8",
 		"cors": "^2.8.5",
 		"dotenv": "^16.5.0",
 		"express": "^5.1.0",
@@ -36,7 +37,7 @@
 		"qs": "^6.14.0",
 		"winston": "^3.17.0",
 		"winston-slack-webhook-transport": "^2.3.6",
-		"zod": "^3.24.4"
+		"zod": "^4.3.5"
 	},
 	"lint-staged": {
 		"*.{js,jsx,ts,tsx}": [
@@ -46,6 +47,7 @@
 	"devDependencies": {
 		"@pluteojs/eslint-config": "workspace:*",
 		"@pluteojs/typescript-config": "workspace:*",
+		"@scalar/express-api-reference": "^0.8.34",
 		"@types/cors": "^2.8.17",
 		"@types/express": "^5.0.1",
 		"@types/http-errors": "^2.0.4",
