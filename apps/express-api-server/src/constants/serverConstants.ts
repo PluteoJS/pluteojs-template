@@ -18,3 +18,9 @@ export enum loggingLevels {
 	DEBUG = "debug",
 	SILLY = "silly",
 }
+
+export enum RequestHeaders {
+	CONTENT_TYPE = "Content-Type",
+	REQUEST_ID = "X-Request-Id",
+	AUTHORIZATION = "Authorization",
+}
