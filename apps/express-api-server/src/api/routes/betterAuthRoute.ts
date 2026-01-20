@@ -1,6 +1,9 @@
 import type {Router, Request, Response} from "express";
+import {z} from "zod";
 import {fromNodeHeaders} from "better-auth/node";
 import {auth, isEndpointAllowed} from "@pluteojs/better-auth";
+
+import {signupBodySchema, signinBodySchema} from "@pluteojs/api-types";
 
 import config from "@config";
 import logger from "@loaders/logger";
@@ -9,6 +12,98 @@ import betterAuthUtil from "@util/betterAuthUtil";
 import {httpStatusCodes} from "@customTypes/networkTypes";
 import type {iResponseError} from "@customTypes/responseTypes";
 import {RequestHeaders} from "@constants/serverConstants";
+import betterAuthConstants from "@constants/betterAuthConstants";
+import {registry} from "@openapi/registry";
+import {SuccessEnvelope, ErrorEnvelope} from "@constants/openAPIConstants";
+
+// Schema for auth response (user + session)
+const authResponseSchema = z.object({
+	user: z.object({
+		id: z.string(),
+		email: z.string().email(),
+		name: z.string(),
+		emailVerified: z.boolean(),
+		createdAt: z.string().datetime(),
+		updatedAt: z.string().datetime(),
+	}),
+	session: z.object({
+		id: z.string(),
+		token: z.string(),
+		expiresAt: z.string().datetime(),
+	}),
+});
+
+// Register OpenAPI documentation for POST /auth/sign-up/email
+registry.registerPath({
+	method: "post",
+	path: "/api/auth/sign-up/email",
+	summary: "Sign up with email",
+	description: "Creates a new user account using email and password.",
+	tags: ["Authentication"],
+	request: {
+		body: {
+			content: {
+				"application/json": {
+					schema: signupBodySchema,
+				},
+			},
+		},
+	},
+	responses: {
+		200: {
+			description: "User created successfully",
+			content: {
+				"application/json": {
+					schema: SuccessEnvelope(authResponseSchema),
+				},
+			},
+		},
+		400: {
+			description: "Validation error or user already exists",
+			content: {
+				"application/json": {
+					schema: ErrorEnvelope,
+				},
+			},
+		},
+	},
+});
+
+// Register OpenAPI documentation for POST /auth/sign-in/email
+registry.registerPath({
+	method: "post",
+	path: "/api/auth/sign-in/email",
+	summary: "Sign in with email",
+	description: "Authenticates a user with email and password.",
+	tags: ["Authentication"],
+	request: {
+		body: {
+			content: {
+				"application/json": {
+					schema: signinBodySchema,
+				},
+			},
+		},
+	},
+	responses: {
+		200: {
+			description: "Authentication successful",
+			content: {
+				"application/json": {
+					schema: SuccessEnvelope(authResponseSchema),
+				},
+			},
+		},
+		401: {
+			description: "Invalid credentials",
+			content: {
+				"application/json": {
+					schema: ErrorEnvelope,
+				},
+			},
+		},
+	},
+});
 
 /**
  * Better Auth route handler.
@@ -126,6 +221,28 @@ export default (route: Router): void => {
 
 			const authResponse = await auth.handler(webRequest);
 
+			/**
+			 * Step 3: Handle OpenAPI reference endpoint specially.
+			 *
+			 * If the request path ends with the OpenAPI endpoint, we return the response
+			 * without any modifications. This allows the browser to render the Scalar
+			 * OpenAPI documentation page correctly.
+			 *
+			 * We use `endsWith()` because the request path includes the route prefix
+			 * (e.g., "/auth/reference"), so we match against the suffix.
+			 */
+			if (authPath.endsWith(betterAuthConstants.OPEN_API_ENDPOINT)) {
+				copyHeaders(authResponse);
+				const htmlBody = await authResponse.text();
+				res.setHeader("Content-Type", authResponse.headers.get("content-type") || "text/html");
+				// Override CSP to allow Scalar scripts from CDN
+				res.setHeader(
+					"Content-Security-Policy",
+					"default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; font-src 'self' https: data:; img-src 'self' data: https:; connect-src 'self' https:;"
+				);
+				return res.status(authResponse.status).send(htmlBody);
+			}
+
 			// Parse response body safely (handles null bodies and JSON parse errors)
 			const contentType = authResponse.headers.get("content-type") || "";
 			let body: unknown;
@@ -136,7 +253,7 @@ export default (route: Router): void => {
 				body = await authResponse.text();
 			}
 
-			// Step 3: Send response with headers preserved
+			// Step 4: Send response with headers preserved
 			if (authResponse.ok) {
 				logger.debug(uniqueRequestId, "Better Auth request successful", null, {
 					status: authResponse.status,

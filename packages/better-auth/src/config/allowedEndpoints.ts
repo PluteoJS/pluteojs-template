@@ -11,6 +11,10 @@ export const defaultAllowedEndpoints: Record<string, string[]> = {
 	"/auth/sign-out": ["POST"],
 	"/auth/get-session": ["GET"],
 
+	// OpenAPI documentation (dev only - better-auth built-in)
+	"/auth/reference": ["GET"],
+	"/auth/open-api/*": ["GET"],
+
 	// Email verification
 	"/auth/verify-email": ["GET", "POST"],
 	"/auth/send-verification-email": ["POST"],
