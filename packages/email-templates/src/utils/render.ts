@@ -1,9 +1,14 @@
 import {render} from "@react-email/render";
 
-// Auth templates
+// Auth templates (OTP-based)
 import {EmailVerificationEmail} from "../emailTemplates/auth/EmailVerificationEmail";
 import {PasswordResetEmail} from "../emailTemplates/auth/PasswordResetEmail";
 import {WelcomeEmail} from "../emailTemplates/auth/WelcomeEmail";
+
+// Better Auth templates (link-based)
+import {BetterAuthEmailVerificationEmail} from "../emailTemplates/betterAuth/BetterAuthEmailVerificationEmail";
+import {BetterAuthPasswordResetEmail} from "../emailTemplates/betterAuth/BetterAuthPasswordResetEmail";
+import {OrganizationInvitationEmail} from "../emailTemplates/betterAuth/OrganizationInvitationEmail";
 
 // Transactional templates
 import {OrderConfirmationEmail} from "../emailTemplates/transactional/OrderConfirmationEmail";
@@ -14,10 +19,14 @@ import {NewsletterEmail} from "../emailTemplates/marketing/NewsletterEmail";
 import {PromotionalEmail} from "../emailTemplates/marketing/PromotionalEmail";
 
 import type {
-	// Auth types
+	// Auth types (OTP-based)
 	iEmailVerificationEmailProps,
 	iPasswordResetEmailProps,
 	iWelcomeEmailProps,
+	// Better Auth types (link-based)
+	iBetterAuthEmailVerificationEmailProps,
+	iBetterAuthPasswordResetEmailProps,
+	iOrganizationInvitationEmailProps,
 	// Transactional types
 	iOrderConfirmationEmailProps,
 	iPaymentReceiptEmailProps,
@@ -60,6 +69,46 @@ export async function renderEmailVerificationEmail(
 	options?: iRenderOptions
 ): Promise<string> {
 	return render(EmailVerificationEmail(props), {plainText: options?.plainText});
+}
+
+// ============================================================================
+// Better Auth Email Render Functions (link-based)
+// ============================================================================
+
+/**
+ * Renders the BetterAuthEmailVerificationEmail template to HTML or plain text string
+ */
+export async function renderBetterAuthEmailVerificationEmail(
+	props: iBetterAuthEmailVerificationEmailProps,
+	options?: iRenderOptions
+): Promise<string> {
+	return render(BetterAuthEmailVerificationEmail(props), {
+		plainText: options?.plainText,
+	});
+}
+
+/**
+ * Renders the BetterAuthPasswordResetEmail template to HTML or plain text string
+ */
+export async function renderBetterAuthPasswordResetEmail(
+	props: iBetterAuthPasswordResetEmailProps,
+	options?: iRenderOptions
+): Promise<string> {
+	return render(BetterAuthPasswordResetEmail(props), {
+		plainText: options?.plainText,
+	});
+}
+
+/**
+ * Renders the OrganizationInvitationEmail template to HTML or plain text string
+ */
+export async function renderOrganizationInvitationEmail(
+	props: iOrganizationInvitationEmailProps,
+	options?: iRenderOptions
+): Promise<string> {
+	return render(OrganizationInvitationEmail(props), {
+		plainText: options?.plainText,
+	});
 }
 
 // ============================================================================
