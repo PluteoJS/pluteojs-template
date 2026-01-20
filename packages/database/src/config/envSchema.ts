@@ -59,11 +59,11 @@ export const databaseEnvSchema = z
 		DATABASE_USER_PASSWORD: z.string().optional(),
 		DATABASE_NAME: z.string().optional(),
 
-		DB_POOL_MIN: poolSizeValidator.default("2"),
-		DB_POOL_MAX: poolSizeValidator.pipe(z.number().min(1)).default("10"),
-		DB_POOL_IDLE_TIMEOUT: timeoutValidator.default("30000"),
+		DB_POOL_MIN: poolSizeValidator.default(2),
+		DB_POOL_MAX: poolSizeValidator.pipe(z.number().min(1)).default(10),
+		DB_POOL_IDLE_TIMEOUT: timeoutValidator.default(30000),
 
-		DB_SSL: stringToBool.default("false"),
+		DB_SSL: stringToBool.default(false),
 	})
 	.refine(
 		(env) => {
