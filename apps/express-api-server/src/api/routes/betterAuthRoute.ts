@@ -36,14 +36,14 @@ export default (route: Router): void => {
 		 * Helper: Copy headers from better-auth response.
 		 * Important for Set-Cookie headers!
 		 */
-		const copyHeaders = (authResponse: globalThis.Response) => {
+		const copyHeaders = (authResponse: globalThis.Response): void => {
 			betterAuthUtil.copyHeadersFromResponse(authResponse, res);
 		};
 
 		/**
 		 * Helper: Send success response (respects envelope setting)
 		 */
-		const sendSuccess = (statusCode: number, data: unknown, authResponse?: globalThis.Response) => {
+		const sendSuccess = (statusCode: number, data: unknown, authResponse?: globalThis.Response): Response<unknown> => {
 			if (authResponse) {copyHeaders(authResponse);}
 
 			if (enableEnvelope) {
@@ -59,7 +59,7 @@ export default (route: Router): void => {
 			statusCode: number,
 			error: {code?: string; message?: string},
 			authResponse?: globalThis.Response
-		) => {
+		): Response<unknown> => {
 			if (authResponse) {copyHeaders(authResponse);}
 
 			if (enableEnvelope) {
