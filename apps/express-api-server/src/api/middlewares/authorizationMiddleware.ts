@@ -3,9 +3,10 @@ import {fromNodeHeaders} from "better-auth/node";
 import {auth} from "@pluteojs/better-auth";
 
 import config from "@config";
-import expressUtil from "@util/expressUtil";
 import {httpStatusCodes} from "@customTypes/networkTypes";
 import {genericServiceErrors} from "@constants/errors/genericServiceErrors";
+import logger from "loaders/logger";
+import expressUtil from "util/expressUtil";
 
 /**
  * Authorization middleware using better-auth.
@@ -17,7 +18,7 @@ export const isAuthorized = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void | Response<unknown>> => {
 	const uniqueRequestId = expressUtil.parseUniqueRequestId(req);
 
 	try {
@@ -42,11 +43,16 @@ export const isAuthorized = async (
 		}
 
 		// Attach session and user to request for use in route handlers
-		(req as Request & {session: typeof session.session; user: typeof session.user}).session = session.session;
-		(req as Request & {session: typeof session.session; user: typeof session.user}).user = session.user;
+		Object.assign(req, {session: session.session, user: session.user});
 
 		next();
 	} catch (error) {
+		logger.error(
+			uniqueRequestId,
+			"Exception in authorizationMiddleware.isAuthorized()",
+			error
+		);
+
 		const enableEnvelope = config.betterAuth.enableResponseEnvelope;
 
 		if (enableEnvelope) {
