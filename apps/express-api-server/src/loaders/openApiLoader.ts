@@ -32,9 +32,9 @@ export async function loadOpenApi(app: Application): Promise<void> {
 
 		// Import routes to trigger registry population
 		// (Routes call registry.registerPath when imported)
-		await import("@api/routes/usersRoute");
-		await import("@api/routes/verificationRoute");
-		await import("@api/routes/betterAuthRoute");
+		await import("@api/routes/v1/usersRoute");
+		await import("@api/routes/v1/verificationRoute");
+		await import("@api/routes/v1/authRoute");
 
 		const spec = generateOpenApiDocument();
 

@@ -1,23 +1,27 @@
 import {Router} from "express";
 
-import betterAuthRoute from "@api/routes/betterAuthRoute";
-import userRoute from "@api/routes/usersRoute";
-import verificationRoute from "@api/routes/verificationRoute";
-
-// Legacy auth route - DEPRECATED: Use betterAuthRoute instead
-// import authRoute from "@api/routes/authRoute";
+import {apiVersioningMiddleware} from "@api/middlewares";
+import healthRoute from "@api/routes/healthRoute";
+import {registerV1Routes} from "@api/routes/v1";
 
 /**
  * Returns the configured API router with all routes attached.
+ *
+ * Route structure:
+ * - /api/health - Unversioned health check endpoint
+ * - /api/v1/* - Version 1 API endpoints (auth, users, verification)
  */
 export default (): Router => {
 	const apiRouter = Router();
 
-	// Better Auth handles all /auth/* endpoints
-	betterAuthRoute(apiRouter);
+	// Unversioned health check endpoint (for load balancers, monitoring)
+	healthRoute(apiRouter);
 
-	userRoute(apiRouter);
-	verificationRoute(apiRouter);
+	// Apply versioning middleware for all versioned routes
+	apiRouter.use(apiVersioningMiddleware);
+
+	// Mount v1 routes
+	apiRouter.use("/v1", registerV1Routes());
 
 	return apiRouter;
 };
