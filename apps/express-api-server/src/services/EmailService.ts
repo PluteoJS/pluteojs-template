@@ -23,7 +23,9 @@ export default class EmailService {
 		userDetails: iUser,
 		dbTx: DBTransaction
 	): Promise<boolean> {
-		const {id: userId, firstName, email} = userDetails;
+		const {id: userId, name, email} = userDetails;
+		// Extract first name from full name
+		const firstName = name.split(" ")[0] || name;
 
 		const senderAddress =
 			config.emailService.transactionalEmail.smtpFromAddress;
@@ -85,7 +87,9 @@ export default class EmailService {
 		userDetails: iUser,
 		dbTx: DBTransaction
 	): Promise<boolean> {
-		const {id: userId, firstName, email} = userDetails;
+		const {id: userId, name, email} = userDetails;
+		// Extract first name from full name
+		const firstName = name.split(" ")[0] || name;
 
 		const senderAddress =
 			config.emailService.transactionalEmail.smtpFromAddress;

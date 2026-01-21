@@ -23,10 +23,12 @@ export default class UsersService {
 			logger.silly("Retrieved userRecord of the user with id as userId");
 			const userDetails: iUser = {
 				id: userRecord.id,
+				name: userRecord.name,
 				email: userRecord.email,
-				firstName: userRecord.firstName,
-				lastName: userRecord.lastName,
+				emailVerified: userRecord.emailVerified,
+				image: userRecord.image,
 				createdAt: userRecord.createdAt?.toISOString() ?? "",
+				updatedAt: userRecord.updatedAt?.toISOString() ?? "",
 			};
 
 			return userDetails;

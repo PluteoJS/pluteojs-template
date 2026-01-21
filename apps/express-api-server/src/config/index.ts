@@ -154,4 +154,12 @@ export default {
 			process.env.EMAIL_VERIFICATION_RETRY_INTERVAL_IN_MINUTES || "5"
 		),
 	},
+
+	// Better Auth configuration
+	betterAuth: {
+		enableResponseEnvelope:
+			process.env.BETTER_AUTH_ENABLE_RESPONSE_ENVELOPE !== "false",
+		// Allowed endpoints can be customized via environment or left as default
+		allowedEndpoints: {} as Record<string, string[]>, // Empty = use defaults from @pluteojs/better-auth
+	},
 };

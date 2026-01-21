@@ -7,10 +7,14 @@
 
 // Render utilities (main API for consumers)
 export {
-	// Auth
+	// Auth (OTP-based)
 	renderWelcomeEmail,
 	renderPasswordResetEmail,
 	renderEmailVerificationEmail,
+	// Better Auth (link-based)
+	renderBetterAuthEmailVerificationEmail,
+	renderBetterAuthPasswordResetEmail,
+	renderOrganizationInvitationEmail,
 	// Transactional
 	renderOrderConfirmationEmail,
 	renderPaymentReceiptEmail,
@@ -21,10 +25,14 @@ export {
 
 // Types only (no React components exported)
 export type {
-	// Auth types
+	// Auth types (OTP-based)
 	iWelcomeEmailProps,
 	iPasswordResetEmailProps,
 	iEmailVerificationEmailProps,
+	// Better Auth types (link-based)
+	iBetterAuthEmailVerificationEmailProps,
+	iBetterAuthPasswordResetEmailProps,
+	iOrganizationInvitationEmailProps,
 	// Transactional types
 	iOrderItem,
 	iOrderConfirmationEmailProps,

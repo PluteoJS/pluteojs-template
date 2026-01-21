@@ -59,7 +59,7 @@ const resourceNotFoundHandler: RequestHandler = (req, res) => {
  */
 interface iValidationErrorDetails {
 	source: string;
-	keys: (string | number)[];
+	keys: (string | number | symbol)[];
 	message: string;
 }
 
@@ -78,7 +78,7 @@ const zodValidationErrorHandler: ErrorRequestHandler = (err, req, res, next) => 
 		const zodError = err as ZodError;
 		const validationErrors: Record<string, iValidationErrorDetails> = {};
 
-		zodError.errors.forEach((error) => {
+		zodError.issues.forEach((issue) => {
 			const segment = "body";
 			if (!validationErrors[segment]) {
 				validationErrors[segment] = {
@@ -87,10 +87,10 @@ const zodValidationErrorHandler: ErrorRequestHandler = (err, req, res, next) => 
 					message: "",
 				};
 			}
-			validationErrors[segment].keys.push(error.path[0] || "unknown");
-			validationErrors[segment].message = zodError.errors
-				.map((e) => {
-					return e.message;
+			validationErrors[segment].keys.push(issue.path[0] || "unknown");
+			validationErrors[segment].message = zodError.issues
+				.map((iss) => {
+					return iss.message;
 				})
 				.join(", ");
 		});

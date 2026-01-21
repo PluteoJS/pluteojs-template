@@ -1,0 +1,1 @@
+export {BetterAuthPasswordResetEmail} from "./BetterAuthPasswordResetEmail";

@@ -1,4 +1,4 @@
-import type {Request} from "express";
+import type {Request, Response as ExpressResponse} from "express";
 
 import type {iJWTPayload} from "./appDataTypes/authTypes";
 import type {iResponseError} from "./responseTypes";
@@ -23,7 +23,7 @@ declare global {
 			/**
 			 * Send a success response wrapped in the standard envelope.
 			 */
-			ok: <T>(data: T, statusCode?: number) => Response;
+			ok: <T>(data: T, statusCode?: number) => ExpressResponse;
 
 			/**
 			 * Send an error response wrapped in the standard envelope.
@@ -32,7 +32,7 @@ declare global {
 				error: iResponseError | string,
 				statusCode?: number,
 				details?: Record<string, unknown>
-			) => Response;
+			) => ExpressResponse;
 
 			/**
 			 * Merge additional metadata into the response meta (pagination, etc.).

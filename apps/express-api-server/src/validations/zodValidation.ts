@@ -13,7 +13,7 @@ import "@customTypes/expressTypes";
  */
 interface iValidationErrorDetails {
 	source: string;
-	keys: (string | number)[];
+	keys: (string | number | symbol)[];
 	message: string;
 }
 
@@ -28,10 +28,10 @@ function formatZodErrors(
 	error: ZodError,
 	segment: string
 ): Record<string, iValidationErrorDetails> {
-	const keys = error.errors.map((err) => {
+	const keys = error.issues.map((err) => {
 		return err.path[0] || "unknown";
 	});
-	const messages = error.errors.map((err) => {
+	const messages = error.issues.map((err) => {
 		return err.message;
 	});
 

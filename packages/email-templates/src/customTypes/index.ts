@@ -1,5 +1,5 @@
 // ============================================================================
-// Auth Email Props
+// Auth Email Props (OTP-based)
 // ============================================================================
 
 /**
@@ -11,7 +11,7 @@ export interface iWelcomeEmailProps {
 }
 
 /**
- * Props for PasswordResetEmail template
+ * Props for PasswordResetEmail template (OTP-based)
  */
 export interface iPasswordResetEmailProps {
 	firstName: string;
@@ -21,12 +21,52 @@ export interface iPasswordResetEmailProps {
 }
 
 /**
- * Props for EmailVerificationEmail template
+ * Props for EmailVerificationEmail template (OTP-based)
  */
 export interface iEmailVerificationEmailProps {
 	otp: string;
 	clientIp?: string | null;
 	expirationMinutes?: number;
+}
+
+// ============================================================================
+// Better Auth Email Props (Link-based)
+// ============================================================================
+
+/**
+ * Props for BetterAuthEmailVerificationEmail template (link-based)
+ */
+export interface iBetterAuthEmailVerificationEmailProps {
+	name: string;
+	email: string;
+	verificationUrl: string;
+	expiresAt?: Date;
+	appName?: string;
+}
+
+/**
+ * Props for BetterAuthPasswordResetEmail template (link-based)
+ */
+export interface iBetterAuthPasswordResetEmailProps {
+	name: string;
+	email: string;
+	resetUrl: string;
+	expiresAt?: Date;
+	appName?: string;
+}
+
+/**
+ * Props for OrganizationInvitationEmail template
+ */
+export interface iOrganizationInvitationEmailProps {
+	inviteeEmail: string;
+	inviterName: string;
+	organizationName: string;
+	role: string;
+	invitationUrl: string;
+	expiresAt?: Date;
+	organizationLogo?: string;
+	appName?: string;
 }
 
 // ============================================================================
