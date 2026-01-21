@@ -13,10 +13,10 @@ import type {iRequest} from "@customTypes/expressTypes";
 
 const usersService = new UsersService();
 
-// Register OpenAPI documentation for GET /users/
+// Register OpenAPI documentation for GET /api/v1/users/
 registry.registerPath({
 	method: "get",
-	path: "/api/users/",
+	path: "/api/v1/users/",
 	summary: "Get current user details",
 	description: "Retrieves the authenticated user's profile information.",
 	tags: ["Users"],

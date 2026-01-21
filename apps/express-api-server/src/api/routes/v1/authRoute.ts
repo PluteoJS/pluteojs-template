@@ -33,10 +33,10 @@ const authResponseSchema = z.object({
 	}),
 });
 
-// Register OpenAPI documentation for POST /auth/sign-up/email
+// Register OpenAPI documentation for POST /api/v1/auth/sign-up/email
 registry.registerPath({
 	method: "post",
-	path: "/api/auth/sign-up/email",
+	path: "/api/v1/auth/sign-up/email",
 	summary: "Sign up with email",
 	description: "Creates a new user account using email and password.",
 	tags: ["Authentication"],
@@ -69,10 +69,10 @@ registry.registerPath({
 	},
 });
 
-// Register OpenAPI documentation for POST /auth/sign-in/email
+// Register OpenAPI documentation for POST /api/v1/auth/sign-in/email
 registry.registerPath({
 	method: "post",
-	path: "/api/auth/sign-in/email",
+	path: "/api/v1/auth/sign-in/email",
 	summary: "Sign in with email",
 	description: "Authenticates a user with email and password.",
 	tags: ["Authentication"],
@@ -190,7 +190,11 @@ export default (route: Router): void => {
 			// Create Web Request from Express request
 			const protocol = req.protocol || "http";
 			const host = req.get("host") || "localhost";
-			const url = new URL(req.originalUrl, `${protocol}://${host}`);
+
+			// Rewrite the URL to match better-auth's expected basePath (/api/auth)
+			// by removing the version prefix from the path
+			const rewrittenPath = req.originalUrl.replace(/^\/api\/v\d+\/auth/, "/api/auth");
+			const url = new URL(rewrittenPath, `${protocol}://${host}`);
 
 			// Use fromNodeHeaders to properly convert Node.js headers (handles cookies, arrays, etc.)
 			const headers = fromNodeHeaders(req.headers);

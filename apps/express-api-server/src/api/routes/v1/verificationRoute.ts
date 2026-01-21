@@ -15,10 +15,10 @@ import type {iRequestEmailVerificationDTO} from "@customTypes/appDataTypes/verif
 
 const verificationService = new VerificationService();
 
-// Register OpenAPI documentation for POST /verification/request-email-verification
+// Register OpenAPI documentation for POST /api/v1/verification/request-email-verification
 registry.registerPath({
 	method: "post",
-	path: "/api/verification/request-email-verification",
+	path: "/api/v1/verification/request-email-verification",
 	summary: "Request email verification",
 	description: "Sends a verification email to the specified address.",
 	tags: ["Verification"],
