@@ -1,4 +1,4 @@
-export interface ApiVersionDoc {
+export interface iApiVersionDoc {
 	version: string;
 	status: "current" | "deprecated" | "beta";
 	apiDocsPath: string;
@@ -6,7 +6,7 @@ export interface ApiVersionDoc {
 	description?: string;
 }
 
-export const apiDocsConfig: ApiVersionDoc[] = [
+export const apiDocsConfig: iApiVersionDoc[] = [
 	{
 		version: "v1",
 		status: "current",

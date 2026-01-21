@@ -1,11 +1,11 @@
 import type {Request, Response, Application} from "express";
 
-import {apiDocsConfig, type ApiVersionDoc} from "@config/docsConfig";
+import {apiDocsConfig, type iApiVersionDoc} from "@config/docsConfig";
 
 /**
  * Generates the status badge HTML for a version.
  */
-function getStatusBadge(status: ApiVersionDoc["status"]): string {
+function getStatusBadge(status: iApiVersionDoc["status"]): string {
 	const badges = {
 		current: {color: "#166534", bgColor: "#dcfce7", label: "CURRENT"},
 		deprecated: {color: "#9a3412", bgColor: "#ffedd5", label: "DEPRECATED"},
@@ -29,7 +29,7 @@ function getStatusBadge(status: ApiVersionDoc["status"]): string {
 /**
  * Generates the HTML for a version card.
  */
-function generateVersionCard(version: ApiVersionDoc): string {
+function generateVersionCard(version: iApiVersionDoc): string {
 	return `
 		<div style="
 			background: white;
