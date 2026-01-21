@@ -1,4 +1,4 @@
-import type {Router, Response, NextFunction} from "express";
+import type {Router, Request, Response, NextFunction} from "express";
 
 import {userResponseSchema} from "@pluteojs/api-types";
 
@@ -8,8 +8,6 @@ import expressUtil from "@util/expressUtil";
 import UsersService from "@services/UsersService";
 import {registry} from "@openapi/registry";
 import {SuccessEnvelope, ErrorEnvelope} from "@constants/openAPIConstants";
-
-import type {iRequest} from "@customTypes/expressTypes";
 
 const usersService = new UsersService();
 
@@ -55,20 +53,16 @@ export default (route: Router): void => {
 	route.get(
 		"/users/",
 		isAuthorized,
-		async (
-			req: iRequest,
-			res: Response,
-			next: NextFunction
-		): Promise<void> => {
+		async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const uniqueRequestId = expressUtil.parseUniqueRequestId(req);
 
 			logger.debug(uniqueRequestId, "Get user details request received");
 
 			try {
-				const userId = req.decodedAccessToken?.uid;
+				const userId = req.user?.id;
 
 				if (!userId) {
-					throw new Error("User ID not found in token");
+					throw new Error("User ID not found in session");
 				}
 
 				const data = await usersService.getUserDetails(userId);

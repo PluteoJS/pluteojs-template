@@ -2,7 +2,6 @@ import type {Request, Response as ExpressResponse} from "express";
 
 import type {ExtendedSession, ExtendedUser} from "@pluteojs/better-auth";
 
-import type {iJWTPayload} from "./appDataTypes/authTypes";
 import type {iResponseError} from "./responseTypes";
 
 /**
@@ -11,7 +10,6 @@ import type {iResponseError} from "./responseTypes";
 export interface iRequest<T = unknown> extends Request {
 	uniqueRequestId?: string;
 	body: T;
-	decodedAccessToken?: iJWTPayload;
 }
 
 /**
