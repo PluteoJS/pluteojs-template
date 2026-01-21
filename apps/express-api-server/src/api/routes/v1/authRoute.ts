@@ -190,11 +190,7 @@ export default (route: Router): void => {
 			// Create Web Request from Express request
 			const protocol = req.protocol || "http";
 			const host = req.get("host") || "localhost";
-
-			// Rewrite the URL to match better-auth's expected basePath (/api/auth)
-			// by removing the version prefix from the path
-			const rewrittenPath = req.originalUrl.replace(/^\/api\/v\d+\/auth/, "/api/auth");
-			const url = new URL(rewrittenPath, `${protocol}://${host}`);
+			const url = new URL(req.originalUrl, `${protocol}://${host}`);
 
 			// Use fromNodeHeaders to properly convert Node.js headers (handles cookies, arrays, etc.)
 			const headers = fromNodeHeaders(req.headers);
