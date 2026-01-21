@@ -1,6 +1,6 @@
 import {z} from "zod";
 
-import {uuidv4Schema, emailSchema, firstNameSchema, lastNameSchema} from "./common.js";
+import {uuidv4Schema, emailSchema, nameSchema} from "./common.js";
 
 /**
  * User-related validation schemas.
@@ -10,14 +10,15 @@ export const userIdSchema = uuidv4Schema;
 
 export const userSchema = z.object({
 	id: userIdSchema,
-	firstName: firstNameSchema,
-	lastName: lastNameSchema,
+	name: nameSchema,
 	email: emailSchema,
-	createdAt: z.date().optional(),
-	updatedAt: z.date().optional(),
+	emailVerified: z.boolean(),
+	image: z.string().nullable(),
+	createdAt: z.string().datetime(),
+	updatedAt: z.string().datetime(),
 });
 
-export const userResponseSchema = userSchema.omit({createdAt: true, updatedAt: true});
+export const userResponseSchema = userSchema;
 
 /**
  * Inferred types from schemas
