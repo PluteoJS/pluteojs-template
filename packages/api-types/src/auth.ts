@@ -2,8 +2,7 @@ import {z} from "zod";
 
 import {
 	emailSchema,
-	firstNameSchema,
-	lastNameSchema,
+	nameSchema,
 	passwordSchema,
 	refreshTokenSchema,
 } from "./common";
@@ -13,15 +12,19 @@ import {
  */
 
 export const signupBodySchema = z.object({
-	firstName: firstNameSchema,
-	lastName: lastNameSchema,
+	name: nameSchema,
 	email: emailSchema,
 	password: passwordSchema,
+	image: z.string().optional(),
+	callbackURL: z.string().optional(),
+	rememberMe: z.boolean().optional(),
 });
 
 export const signinBodySchema = z.object({
 	email: emailSchema,
 	password: passwordSchema,
+	callbackURL: z.string().optional(),
+	rememberMe: z.boolean().optional(),
 });
 
 export const renewAccessTokenBodySchema = z.object({
