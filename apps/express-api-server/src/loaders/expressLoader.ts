@@ -33,7 +33,6 @@ const addRequestId: RequestHandler = (req, res, next) => {
 	 * We are using a custom middleware to add a unique request id to each
 	 * request. This is useful for tracking requests in logs and debugging.
 	 */
-	// eslint-disable-next-line no-param-reassign
 	(req as express.Request & {uniqueRequestId: string}).uniqueRequestId =
 		securityUtil.generateUUID();
 

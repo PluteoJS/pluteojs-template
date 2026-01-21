@@ -1,5 +1,5 @@
 // Auth templates (OTP-based)
-export {WelcomeEmail, PasswordResetEmail, EmailVerificationEmail} from "./auth";
+export {WelcomeEmail, EmailVerificationEmail} from "./auth";
 
 // Better Auth templates (link-based)
 export {

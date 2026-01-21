@@ -43,7 +43,8 @@ export const isAuthorized = async (
 		}
 
 		// Attach session and user to request for use in route handlers
-		Object.assign(req, {session: session.session, user: session.user});
+		req.session = session.session;
+		req.user = session.user;
 
 		next();
 	} catch (error) {

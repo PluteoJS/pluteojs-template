@@ -16,15 +16,12 @@ import "@customTypes/expressTypes";
  */
 export const responseEnvelope: RequestHandler = (req, res, next) => {
 	// Initialize response meta with null pagination
-	// eslint-disable-next-line no-param-reassign
 	res.locals.responseMeta = {pagination: null};
 
 	/**
 	 * Merge additional metadata into the response meta.
 	 */
-	// eslint-disable-next-line no-param-reassign
 	res.setResponseMeta = (meta: Record<string, unknown>): void => {
-		// eslint-disable-next-line no-param-reassign
 		res.locals.responseMeta = {...res.locals.responseMeta, ...meta};
 	};
 
@@ -55,7 +52,6 @@ export const responseEnvelope: RequestHandler = (req, res, next) => {
 	/**
 	 * Send a success response wrapped in the standard envelope.
 	 */
-	// eslint-disable-next-line no-param-reassign
 	res.ok = <T>(data: T, statusCode = httpStatusCodes.SUCCESS_OK): Response => {
 		const body = buildBody(true, statusCode, data, null);
 		return res.status(statusCode).json(body);
@@ -64,7 +60,6 @@ export const responseEnvelope: RequestHandler = (req, res, next) => {
 	/**
 	 * Send an error response wrapped in the standard envelope.
 	 */
-	// eslint-disable-next-line no-param-reassign
 	res.fail = (
 		errorLike: iResponseError | string,
 		statusCode = httpStatusCodes.CLIENT_ERROR_BAD_REQUEST,

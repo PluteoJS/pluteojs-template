@@ -1,7 +1,4 @@
-import fs from "fs";
-
 import dotenv from "dotenv";
-import type {Algorithm} from "jsonwebtoken";
 
 import {loggingLevels, serverModes} from "@constants/serverConstants";
 
@@ -75,6 +72,12 @@ export default {
 	// api config
 	api: {
 		prefix: "/api",
+		versions: {
+			current: "v1",
+			supported: ["v1"],
+			deprecated: [] as string[],
+			defaultVersion: "v1",
+		},
 	},
 
 	// database config
@@ -86,19 +89,6 @@ export default {
 		dbName: process.env.DATABASE_NAME,
 
 		pgPromiseOptions: {},
-	},
-
-	jwtConfig: {
-		algorithm: process.env.JWT_ALGORITHM as Algorithm,
-		accessTokenExpiresIn: typeUtil.convertDurationToMs(
-			process.env.JWT_ACCESS_TOKEN_EXPIRES_IN || "15m"
-		),
-		refreshTokenExpiresIn: typeUtil.convertDurationToMs(
-			process.env.JWT_REFRESH_TOKEN_EXPIRES_IN || "7d"
-		),
-		secretKey: process.env.JWT_SECRET_KEY_FILE_PATH
-			? fs.readFileSync(process.env.JWT_SECRET_KEY_FILE_PATH)
-			: Buffer.from(process.env.JWT_SECRET_KEY || "default-secret"),
 	},
 
 	emailService: {
@@ -130,15 +120,6 @@ export default {
 			smtpFromAddress: process.env.EMAIL_SERVICE_MARKETING_SMTP_FROM_ADDRESS,
 			smtpPassword: process.env.EMAIL_SERVICE_MARKETING_SMTP_PASSWORD,
 		},
-	},
-
-	resetPasswordConfig: {
-		otpCustomAlphabet: process.env.PASSWORD_RESET_OTP_CUSTOM_ALPHABET,
-		otpLength: Number(process.env.PASSWORD_RESET_OTP_LENGTH || "6"),
-		retryIntervalInMinutes: Number(
-			process.env.RESET_PASSWORD_RETRY_INTERVAL_IN_MINUTES || "5"
-		),
-		otpValidity: Number(process.env.RESET_PASSWORD_OTP_VALIDITY_IN_MINUTES || "15"),
 	},
 
 	verificationConfig: {

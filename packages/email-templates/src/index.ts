@@ -9,7 +9,6 @@
 export {
 	// Auth (OTP-based)
 	renderWelcomeEmail,
-	renderPasswordResetEmail,
 	renderEmailVerificationEmail,
 	// Better Auth (link-based)
 	renderBetterAuthEmailVerificationEmail,
@@ -27,7 +26,6 @@ export {
 export type {
 	// Auth types (OTP-based)
 	iWelcomeEmailProps,
-	iPasswordResetEmailProps,
 	iEmailVerificationEmailProps,
 	// Better Auth types (link-based)
 	iBetterAuthEmailVerificationEmailProps,

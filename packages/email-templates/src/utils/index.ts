@@ -1,7 +1,6 @@
 export {
 	// Auth (OTP-based)
 	renderWelcomeEmail,
-	renderPasswordResetEmail,
 	renderEmailVerificationEmail,
 	// Better Auth (link-based)
 	renderBetterAuthEmailVerificationEmail,

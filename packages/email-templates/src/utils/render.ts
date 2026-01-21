@@ -2,7 +2,6 @@ import {render} from "@react-email/render";
 
 // Auth templates (OTP-based)
 import {EmailVerificationEmail} from "../emailTemplates/auth/EmailVerificationEmail";
-import {PasswordResetEmail} from "../emailTemplates/auth/PasswordResetEmail";
 import {WelcomeEmail} from "../emailTemplates/auth/WelcomeEmail";
 
 // Better Auth templates (link-based)
@@ -21,7 +20,6 @@ import {PromotionalEmail} from "../emailTemplates/marketing/PromotionalEmail";
 import type {
 	// Auth types (OTP-based)
 	iEmailVerificationEmailProps,
-	iPasswordResetEmailProps,
 	iWelcomeEmailProps,
 	// Better Auth types (link-based)
 	iBetterAuthEmailVerificationEmailProps,
@@ -49,16 +47,6 @@ export async function renderWelcomeEmail(
 	options?: iRenderOptions
 ): Promise<string> {
 	return render(WelcomeEmail(props), {plainText: options?.plainText});
-}
-
-/**
- * Renders the PasswordResetEmail template to HTML or plain text string
- */
-export async function renderPasswordResetEmail(
-	props: iPasswordResetEmailProps,
-	options?: iRenderOptions
-): Promise<string> {
-	return render(PasswordResetEmail(props), {plainText: options?.plainText});
 }
 
 /**

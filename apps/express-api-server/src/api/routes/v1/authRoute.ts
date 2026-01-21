@@ -1,9 +1,6 @@
 import type {Router, Request, Response} from "express";
-import {z} from "zod";
 import {fromNodeHeaders} from "better-auth/node";
 import {auth, isEndpointAllowed} from "@pluteojs/better-auth";
-
-import {signupBodySchema, signinBodySchema} from "@pluteojs/api-types";
 
 import config from "@config";
 import logger from "@loaders/logger";
@@ -13,97 +10,6 @@ import {httpStatusCodes} from "@customTypes/networkTypes";
 import type {iResponseError} from "@customTypes/responseTypes";
 import {RequestHeaders} from "@constants/serverConstants";
 import betterAuthConstants from "@constants/betterAuthConstants";
-import {registry} from "@openapi/registry";
-import {SuccessEnvelope, ErrorEnvelope} from "@constants/openAPIConstants";
-
-// Schema for auth response (user + session)
-const authResponseSchema = z.object({
-	user: z.object({
-		id: z.string(),
-		email: z.string().email(),
-		name: z.string(),
-		emailVerified: z.boolean(),
-		createdAt: z.string().datetime(),
-		updatedAt: z.string().datetime(),
-	}),
-	session: z.object({
-		id: z.string(),
-		token: z.string(),
-		expiresAt: z.string().datetime(),
-	}),
-});
-
-// Register OpenAPI documentation for POST /auth/sign-up/email
-registry.registerPath({
-	method: "post",
-	path: "/api/auth/sign-up/email",
-	summary: "Sign up with email",
-	description: "Creates a new user account using email and password.",
-	tags: ["Authentication"],
-	request: {
-		body: {
-			content: {
-				"application/json": {
-					schema: signupBodySchema,
-				},
-			},
-		},
-	},
-	responses: {
-		200: {
-			description: "User created successfully",
-			content: {
-				"application/json": {
-					schema: SuccessEnvelope(authResponseSchema),
-				},
-			},
-		},
-		400: {
-			description: "Validation error or user already exists",
-			content: {
-				"application/json": {
-					schema: ErrorEnvelope,
-				},
-			},
-		},
-	},
-});
-
-// Register OpenAPI documentation for POST /auth/sign-in/email
-registry.registerPath({
-	method: "post",
-	path: "/api/auth/sign-in/email",
-	summary: "Sign in with email",
-	description: "Authenticates a user with email and password.",
-	tags: ["Authentication"],
-	request: {
-		body: {
-			content: {
-				"application/json": {
-					schema: signinBodySchema,
-				},
-			},
-		},
-	},
-	responses: {
-		200: {
-			description: "Authentication successful",
-			content: {
-				"application/json": {
-					schema: SuccessEnvelope(authResponseSchema),
-				},
-			},
-		},
-		401: {
-			description: "Invalid credentials",
-			content: {
-				"application/json": {
-					schema: ErrorEnvelope,
-				},
-			},
-		},
-	},
-});
 
 /**
  * Better Auth route handler.

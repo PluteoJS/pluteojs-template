@@ -11,16 +11,6 @@ export interface iWelcomeEmailProps {
 }
 
 /**
- * Props for PasswordResetEmail template (OTP-based)
- */
-export interface iPasswordResetEmailProps {
-	firstName: string;
-	otp: string;
-	clientIp?: string | null;
-	expirationMinutes?: number;
-}
-
-/**
  * Props for EmailVerificationEmail template (OTP-based)
  */
 export interface iEmailVerificationEmailProps {

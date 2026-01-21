@@ -1,6 +1,5 @@
 import {
 	renderEmailVerificationEmail,
-	renderPasswordResetEmail,
 	renderWelcomeEmail,
 } from "@pluteojs/email-templates";
 
@@ -75,69 +74,6 @@ export default class EmailService {
 			return true;
 		}
 
-		return false;
-	}
-
-	/**
-	 * Sends the OTP to the user for password reset.
-	 */
-	public async sendResetPasswordEmail(
-		clientIp: NullableString,
-		otp: string,
-		userDetails: iUser,
-		dbTx: DBTransaction
-	): Promise<boolean> {
-		const {id: userId, name, email} = userDetails;
-		// Extract first name from full name
-		const firstName = name.split(" ")[0] || name;
-
-		const senderAddress =
-			config.emailService.transactionalEmail.smtpFromAddress;
-		const subject = "Reset Password | PluteoJS";
-
-		// Render HTML and plain text versions using react-email templates
-		const htmlBody = await renderPasswordResetEmail({
-			firstName,
-			otp,
-			clientIp,
-			expirationMinutes: 10,
-		});
-		const textBody = await renderPasswordResetEmail(
-			{firstName, otp, clientIp, expirationMinutes: 10},
-			{plainText: true}
-		);
-
-		logger.silly("Sending password reset email");
-		const messageSendResult = await emailServiceUtil.sendTransactionHtmlEmail(
-			senderAddress,
-			email,
-			null,
-			null,
-			subject,
-			textBody,
-			htmlBody
-		);
-
-		logger.silly("Message send result", messageSendResult);
-		const {response, messageId: messageIdWithSymbols} = messageSendResult;
-
-		if (response.includes("250") && messageIdWithSymbols) {
-			const messageId = emailServiceUtil.parseMessageId(messageIdWithSymbols);
-
-			const uuid = securityUtil.generateUUID();
-			logger.silly("Creating email log record");
-			await dbTx.insert(emailLogs).values({
-				id: uuid,
-				userId,
-				messageId,
-				senderAddress,
-				targetAddress: email,
-				subject,
-				bodyType: emailBodyTypes.HTML,
-				body: htmlBody,
-			});
-			return true;
-		}
 		return false;
 	}
 

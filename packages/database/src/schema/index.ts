@@ -1,8 +1,5 @@
-// Better Auth schemas (replaces legacy auth)
+// Better Auth schemas
 export * from "./betterAuth";
-
-// Legacy auth schemas - DEPRECATED: To be removed after migration
-// export * from "./auth";
 
 // Email schemas
 export * from "./email";

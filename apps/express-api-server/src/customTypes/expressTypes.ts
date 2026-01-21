@@ -1,6 +1,7 @@
 import type {Request, Response as ExpressResponse} from "express";
 
-import type {iJWTPayload} from "./appDataTypes/authTypes";
+import type {ExtendedSession, ExtendedUser} from "@pluteojs/better-auth";
+
 import type {iResponseError} from "./responseTypes";
 
 /**
@@ -9,7 +10,6 @@ import type {iResponseError} from "./responseTypes";
 export interface iRequest<T = unknown> extends Request {
 	uniqueRequestId?: string;
 	body: T;
-	decodedAccessToken?: iJWTPayload;
 }
 
 /**
@@ -18,6 +18,19 @@ export interface iRequest<T = unknown> extends Request {
 declare global {
 	// eslint-disable-next-line @typescript-eslint/no-namespace
 	namespace Express {
+		// eslint-disable-next-line @typescript-eslint/naming-convention
+		interface Request {
+			/**
+			 * User session attached by authorization middleware.
+			 */
+			session?: ExtendedSession;
+
+			/**
+			 * Authenticated user attached by authorization middleware.
+			 */
+			user?: ExtendedUser;
+		}
+
 		// eslint-disable-next-line @typescript-eslint/naming-convention
 		interface Response {
 			/**
