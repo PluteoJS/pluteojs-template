@@ -14,8 +14,9 @@ const isDevelopment = (): boolean => {
 /**
  * Loads OpenAPI documentation routes (development only).
  *
- * - GET /api/openapi.json - Returns the OpenAPI spec
- * - GET /docs - Scalar API Reference UI
+ * Versioned documentation endpoints:
+ * - GET /api/v1/openapi.json - Returns the v1 OpenAPI spec
+ * - GET /api/v1/docs - Scalar API Reference UI for v1
  *
  * @param app - Express application instance
  */
@@ -38,22 +39,22 @@ export async function loadOpenApi(app: Application): Promise<void> {
 
 		const spec = generateOpenApiDocument();
 
-		// Serve OpenAPI JSON spec
-		app.get("/api/openapi.json", (req, res) => {
+		// Serve OpenAPI JSON spec at versioned path
+		app.get("/api/v1/openapi.json", (req, res) => {
 			void req; // unused
 			res.json(spec);
 		});
 
-		// Serve Scalar API Reference UI
+		// Serve Scalar API Reference UI at versioned path
 		app.use(
-			"/docs",
+			"/api/v1/docs",
 			apiReference({
-				url: "/api/openapi.json",
+				url: "/api/v1/openapi.json",
 				theme: "default",
 			})
 		);
 
-		Logger.loggerInstance.info("OpenAPI docs available at /docs");
+		Logger.loggerInstance.info("OpenAPI docs available at /api/v1/docs");
 	} catch (error) {
 		Logger.loggerInstance.error("Failed to load OpenAPI documentation", {error});
 	}
