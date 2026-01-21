@@ -75,6 +75,12 @@ export default {
 	// api config
 	api: {
 		prefix: "/api",
+		versions: {
+			current: "v1",
+			supported: ["v1"],
+			deprecated: [] as string[],
+			defaultVersion: "v1",
+		},
 	},
 
 	// database config
