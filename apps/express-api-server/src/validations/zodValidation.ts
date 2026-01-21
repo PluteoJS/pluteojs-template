@@ -66,7 +66,6 @@ export function validateBody<T>(schema: ZodSchema<T>): RequestHandler {
 			return;
 		}
 
-		// eslint-disable-next-line no-param-reassign
 		req.body = result.data;
 		next();
 	};

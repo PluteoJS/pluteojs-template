@@ -52,8 +52,14 @@ export const config = [
 			// Encourage using object shorthand
 			"object-shorthand": ["error", "always"],
 
-			// Prevent reassigning parameters
-			"no-param-reassign": ["error", {props: true}],
+			// Prevent reassigning parameters (allow Express req/res modifications)
+			"no-param-reassign": [
+				"error",
+				{
+					props: true,
+					ignorePropertyModificationsFor: ["req", "res", "next"],
+				},
+			],
 
 			// Use double quotes consistently
 			quotes: ["error", "double", {allowTemplateLiterals: true}],

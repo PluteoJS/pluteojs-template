@@ -7,7 +7,7 @@ import {apiVersioningErrors} from "@constants/errors/apiVersioningErrors";
 /**
  * Extended Request interface with API version.
  */
-export interface VersionedRequest extends Request {
+export interface iVersionedRequest extends Request {
 	apiVersion?: string;
 }
 
@@ -39,7 +39,7 @@ const extractVersionFromPath = (path: string): string | null => {
  * @param next - Express next function
  */
 export const apiVersioningMiddleware = (
-	req: VersionedRequest,
+	req: iVersionedRequest,
 	res: Response,
 	next: NextFunction
 ): void => {
