@@ -16,8 +16,6 @@ export const lastNameSchema = z.string().min(1, "Last name is required");
 
 export const passwordSchema = z.string().min(1, "Password is required");
 
-export const refreshTokenSchema = z.string().min(1, "Refresh token is required");
-
 /**
  * Inferred types from schemas
  */

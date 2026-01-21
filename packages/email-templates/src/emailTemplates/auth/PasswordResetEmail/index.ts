@@ -1,1 +1,0 @@
-export {PasswordResetEmail} from "./PasswordResetEmail";
