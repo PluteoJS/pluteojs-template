@@ -1,1 +1,7 @@
+if grep -qiE '(^|[[:space:]])co-authored-by:.*(claude|anthropic)|generated with[[:space:]]+\[?claude|noreply@anthropic\.com' "$1"; then
+	echo "Commit rejected: AI/LLM attribution detected in commit message." >&2
+	echo "Remove any 'Co-Authored-By: Claude' trailers and 'Generated with Claude Code' lines." >&2
+	exit 1
+fi
+
 pnpm commitlint --edit "$1"
